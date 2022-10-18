@@ -39,12 +39,18 @@ In the [rebase](https://git-scm.com/docs/git-rebase) step, try to clean the comm
 
 ## Commit Strategy
 
-Commit messages should follow one of the followings:
+Commit messages should follow one of the followings in which \<jira-issue-key> can be found in Jira issues:
 
-- **feat**: A new feature
-- **fix**: A bug fix
-- **style**: Additions or modifications related to styling only
-- **refactor**: Code refactoring
-- **test**: Additions or modifications to test cases
-- **docs**: README, Architectural, or anything related to - documentation
-- **chore**: Regular code maintenance
+- \<jira-issue-key> **feat**: A new feature
+- \<jira-issue-key> **fix**: A bug fix
+- \<jira-issue-key> **style**: Additions or modifications related to styling only
+- \<jira-issue-key> **refactor**: Code refactoring
+- \<jira-issue-key> **test**: Additions or modifications to test cases
+- \<jira-issue-key> **docs**: README, Architectural, or anything related to - documentation
+- \<jira-issue-key> **chore**: Regular code maintenance
+
+As an example:
+
+```bash
+git commit -m "DSIP-3758 dpcs: update git documentation"
+```
