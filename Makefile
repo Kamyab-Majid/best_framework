@@ -87,6 +87,7 @@ Security: ## checks for security in dependencies and current package
 	bandit -r pynutrien/
 
 docs: ## generate Sphinx documentation using doc_type, including API docs.
+	rm -f -r sphinx/_build
 	rm -f -r docs
 	rm -f sphinx/pynutrien.rst
 	rm -f sphinx/modules.rst

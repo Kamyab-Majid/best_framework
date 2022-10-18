@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Makefile Documentation &mdash; python library repository 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="git Documentation" href="git.html" />
+    <link rel="prev" title="Coding Documentation" href="coding.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> python library repository
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding.html">Coding Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Makefile Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dist">Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clean">Clean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-all">test-all</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coverage">Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lint">Lint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#format">Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security">Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release">Release</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="git.html">git Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sphinx.html">Sphinx documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pynutrien</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">python library repository</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Makefile Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/makefile.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="makefile-documentation">
+<h1>Makefile Documentation<a class="headerlink" href="#makefile-documentation" title="Permalink to this heading"></a></h1>
+<p>In this documentation, we are going to briefly describe what each makefile command does.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>To briefly describe the commands, please use <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">help</span></code> in the terminal of your choice which will generate:</p>
+<ul class="simple">
+<li><p><strong>clean</strong>:                remove all build, test, coverage and Python artifacts</p></li>
+<li><p><strong>clean-build</strong>:          remove build artifacts.</p></li>
+<li><p><strong>clean-pyc</strong>:            remove Python file artifacts.</p></li>
+<li><p><strong>clean-test</strong>:           remove test and coverage artifacts.</p></li>
+<li><p><strong>lint</strong>:                 check style.</p></li>
+<li><p><strong>format</strong>:               format style.</p></li>
+<li><p><strong>test</strong>:                 run tests quickly with the default Python.</p></li>
+<li><p><strong>test-all</strong>:             run tests on every Python version with tox.</p></li>
+<li><p><strong>coverage</strong>:             check code coverage quickly with the default Python.</p></li>
+<li><p><strong>docs</strong>:                 generate Sphinx documentation using doc_type, including API docs.</p></li>
+<li><p><strong>servedocs</strong>:            compile the docs watching for changes. Usage:  use it whenever you have a server that wants to update as soon as the file changes. The command should be always running.</p></li>
+<li><p><strong>release</strong>:              package and upload a release</p></li>
+<li><p><strong>dist</strong>:                 builds source and wheel package</p></li>
+<li><p><strong>install</strong>:              install the package to the active Python's site-packages</p></li>
+<li><p><strong>Security</strong>             checks for security in dependencies and current package
+In the next sections, we are going to briefly describe some commands in more detail.</p></li>
+</ul>
+</section>
+<section id="dist">
+<h2>Dist<a class="headerlink" href="#dist" title="Permalink to this heading"></a></h2>
+<p>Create the <a class="reference external" href="https://docs.python.org/3/library/distribution.html">distribution</a> for the current python package. To build distribution package use this option. This will generate a distribution archives in the dist folder. In fact, if you look in your directory you should see a few new folders one called dist and one called build. These were generated when we ran the command.</p>
+</section>
+<section id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this heading"></a></h2>
+<p>install the package to the active Python's environment site-packages locally.</p>
+</section>
+<section id="clean">
+<h2>Clean<a class="headerlink" href="#clean" title="Permalink to this heading"></a></h2>
+<p>It will clean the dist folder which include <a class="reference external" href="https://packaging.python.org/en/latest/glossary/">distribution</a></p>
+</section>
+<section id="test">
+<h2>Test<a class="headerlink" href="#test" title="Permalink to this heading"></a></h2>
+<p>Test the package using <a class="reference external" href="https://docs.pytest.org/en/7.1.x/">pytest.py</a>.</p>
+</section>
+<section id="test-all">
+<h2>test-all<a class="headerlink" href="#test-all" title="Permalink to this heading"></a></h2>
+<p>It is a more general way of testing the package with multiple python versions using <a class="reference external" href="https://tox.wiki/en/latest/">tox</a></p>
+</section>
+<section id="coverage">
+<h2>Coverage<a class="headerlink" href="#coverage" title="Permalink to this heading"></a></h2>
+<p>It examines the package to see if a part of the code is missed while testing using <a class="reference external" href="https://coverage.readthedocs.io/en/6.5.0/">coverage</a> package. This is used to make sure the tests are inclusive of every line of the codes.</p>
+</section>
+<section id="lint">
+<h2>Lint<a class="headerlink" href="#lint" title="Permalink to this heading"></a></h2>
+<p>check the style of each python file to make sure it conforms with the expected formats of <a class="reference external" href="https://pypi.org/project/autopep8/">autopep8</a>, <a class="reference external" href="https://black.readthedocs.io/en/stable/">black</a> and <a class="reference external" href="https://pypi.org/project/isort/">isort</a>. This is a good practice to do before releasing the package.</p>
+</section>
+<section id="format">
+<h2>Format<a class="headerlink" href="#format" title="Permalink to this heading"></a></h2>
+<p>formats the the style of each python file to make sure it conforms with the expected formats of <a class="reference external" href="https://pypi.org/project/autopep8/">autopep8</a>, <a class="reference external" href="https://black.readthedocs.io/en/stable/">black</a> and <a class="reference external" href="https://pypi.org/project/isort/">isort</a>.</p>
+</section>
+<section id="security">
+<h2>Security<a class="headerlink" href="#security" title="Permalink to this heading"></a></h2>
+<p>This option is check the libraries with <a class="reference external" href="https://pypi.org/project/safety/">safety</a> and the code in this project with <a class="reference external" href="https://pypi.org/project/bandit/">Bandit</a>.
+Safety has a database in which packages with security issues using <a class="reference external" href="https://www.cvedetails.com/index.php">CVE</a>. By searching between your environment packages it will try to find security issues considering the version of those packages. You can see a full report using <code class="docutils literal notranslate"><span class="pre">safety</span> <span class="pre">check</span> <span class="pre">--full-report</span></code>.
+Bandit on the other hand, search between your code and find security issues such as a password or a token inside your code.</p>
+</section>
+<section id="release">
+<h2>Release<a class="headerlink" href="#release" title="Permalink to this heading"></a></h2>
+<p>package and upload a release of the package. Make sure to update setup.py config beforehand using <a class="reference external" href="https://docs.python.org/3/distutils/setupscript.html">python documentation on setup.py</a>.
+In order to use make to release a version, This is the proposed procedure:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make <span class="nb">test</span>
+make test-all
+make coverage
+make security
+make format
+make lint
+make release
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="coding.html" class="btn btn-neutral float-left" title="Coding Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="git.html" class="btn btn-neutral float-right" title="git Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Majid Kamyab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

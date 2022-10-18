@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sphinx documentation &mdash; python library repository 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="git Documentation" href="git.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> python library repository
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding.html">Coding Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="makefile.html">Makefile Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="git.html">git Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sphinx documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#demo-of-the-sphinx">demo of the Sphinx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#text-formatting-syntax">text formatting syntax</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#restructuredtext">reStructuredText</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#markdown">Markdown</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sphinx-structure">sphinx structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-docstrings">API Docstrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#github">GitHub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pynutrien</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">python library repository</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Sphinx documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sphinx.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sphinx-documentation">
+<h1>Sphinx documentation<a class="headerlink" href="#sphinx-documentation" title="Permalink to this heading"></a></h1>
+<p>For a short video of sphinx please take a look at <a class="reference external" href="https://byu-cpe.github.io/ComputingBootCamp/tutorials/sphinx/">Sphinx Intro</a>. By using Sphinx you can easily create documentation using the docstring in the code and other documents in the repository.</p>
+<section id="demo-of-the-sphinx">
+<h2>demo of the Sphinx<a class="headerlink" href="#demo-of-the-sphinx" title="Permalink to this heading"></a></h2>
+<p>To make a new document do the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone git@github.com:Nutrien/sphinx_template.git</span>
+<span class="go">make docs doc_type=html</span>
+</pre></div>
+</div>
+<p>You can change <code class="docutils literal notranslate"><span class="pre">html</span></code> with one of the followings:</p>
+<ul class="simple">
+<li><p><strong>html</strong>:        to make standalone HTML files</p></li>
+<li><p><strong>dirhtml</strong>:     to make HTML files named index.html in directories</p></li>
+<li><p><strong>singlehtml</strong>:  to make a single large HTML file</p></li>
+<li><p><strong>pickle</strong>:    to make pickle files</p></li>
+<li><p><strong>json</strong>:      to make JSON files</p></li>
+<li><p><strong>htmlhelp</strong>:    to make HTML files and an HTML help project</p></li>
+<li><p><strong>qthelp</strong>:    to make HTML files and a qthelp project</p></li>
+<li><p><strong>devhelp</strong>:     to make HTML files and a Devhelp project</p></li>
+<li><p><strong>epub</strong>:      to make an epub</p></li>
+<li><p><strong>latex</strong>:     to make LaTeX files, you can set PAPER=a4 or PAPER=letter</p></li>
+<li><p><strong>latexpdf</strong>:    to make LaTeX and PDF files (default pdflatex)</p></li>
+<li><p><strong>latexpdfja</strong>:  to make LaTeX files and run them through platex/dvipdfmx</p></li>
+<li><p><strong>text</strong>:      to make text files</p></li>
+<li><p><strong>man</strong>:       to make manual pages</p></li>
+<li><p><strong>texinfo</strong>:     to make Texinfo files</p></li>
+<li><p><strong>info</strong>:      to make Texinfo files and run them through makeinfo</p></li>
+<li><p><strong>gettext</strong>:     to make PO message catalogs</p></li>
+<li><p><strong>changes</strong>:     to make an overview of all changed/added/deprecated items</p></li>
+<li><p><strong>xml</strong>:       to make Docutils-native XML files</p></li>
+<li><p><strong>pseudoxml</strong>:   to make pseudoxml-XML files for display purposes</p></li>
+<li><p><strong>linkcheck</strong>:   to check all external links for integrity</p></li>
+<li><p><strong>doctest</strong>:     to run all doctests embedded in the documentation (if enabled)</p></li>
+<li><p><strong>coverage</strong>:    to run coverage check of the documentation (if enabled)</p></li>
+</ul>
+<p>Then you can find the <code class="docutils literal notranslate"><span class="pre">doc_type</span></code> directory under <code class="docutils literal notranslate"><span class="pre">docs/_build</span></code>
+To use Sphinx in a directory use [^1]:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sphinx-quickstart &lt;path to the directory you created&gt;</span>
+</pre></div>
+</div>
+<p>[^1] for more info about initiating Sphinx visit <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/quickstart.html">quick start to Sphinx</a>.</p>
+</section>
+<section id="text-formatting-syntax">
+<h2>text formatting syntax<a class="headerlink" href="#text-formatting-syntax" title="Permalink to this heading"></a></h2>
+<p>Sphinx supports multiple formatting syntax and here we mention two of the most used ones.</p>
+<section id="restructuredtext">
+<h3>reStructuredText<a class="headerlink" href="#restructuredtext" title="Permalink to this heading"></a></h3>
+<p>reStructuredText is the default text formatting syntax of Sphinx. It is an easy-to-read, what-you-see-is-what-you-get plaintext markup syntax and parser system, you can use the <a class="reference external" href="https://github.com/ralsina/rst-cheatsheet/blob/master/rst-cheatsheet.rst">Restructure text cheat sheet</a> when you want to use this format.</p>
+</section>
+<section id="markdown">
+<h3>Markdown<a class="headerlink" href="#markdown" title="Permalink to this heading"></a></h3>
+<p>in order to use Markdown in your repo make sure to include <code class="docutils literal notranslate"><span class="pre">myst_parser</span></code> in the <code class="docutils literal notranslate"><span class="pre">docs/conf.py</span></code> extensions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;myst_parser&#39;</span><span class="p">,</span><span class="s1">&#39;other extensions&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can use <a class="reference external" href="https://www.markdownguide.org/cheat-sheet/">Markdown cheat sheet</a> in this case.</p>
+</section>
+</section>
+<section id="sphinx-structure">
+<h2>sphinx structure<a class="headerlink" href="#sphinx-structure" title="Permalink to this heading"></a></h2>
+<p>Sphinx main parts are the <code class="docutils literal notranslate"><span class="pre">docs/makefile</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/conf.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs/index.rst</span></code>. Which are explained below:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/makefile</span></code>: It is used to build the documentation while calling the make command.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/conf.py</span></code>: the configuration of the Sphinx, for more information please visit <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">Sphinx documentation</a>. You can set the theme of your sphinx using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">html_theme</span> <span class="o">=</span> <span class="s2">&quot;sphinx_rtd_theme&quot;</span>
+</pre></div>
+</div>
+<p>in this file. Feel free to change the <code class="docutils literal notranslate"><span class="pre">sphinx_rtd_theme</span></code> with the theme of your choice.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/index.</span></code> The main part is the <em>toctree</em> which is what files to include in the documentation.</p></li>
+</ul>
+</section>
+<section id="api-docstrings">
+<h2>API Docstrings<a class="headerlink" href="#api-docstrings" title="Permalink to this heading"></a></h2>
+<p>Sphinx can update the documentation using the docstrings in the repository. As an example, two of the best practices are google and Numpy docstring formats in which <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html">sphinx.ext.napoleon</a> extension supports it, make sure to add this extension in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code><a class="footnote-reference brackets" href="#id2" id="id1">2</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sphinx.ext.napoleon&#39;</span><span class="p">,</span><span class="s1">&#39;other-extensions&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="text-center head"><p><img alt="typing gif" src="_images/typing_docstring.gif" /></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><em>demonstration of how to generate docstring including the type hints</em></p></td>
+</tr>
+</tbody>
+</table>
+<p>In case you are using Pycharm take a look at <a class="reference external" href="https://www.jetbrains.com/help/pycharm/creating-documentation-comments.html">Pycharm docstring</a> .</p>
+</section>
+<section id="github">
+<h2>GitHub<a class="headerlink" href="#github" title="Permalink to this heading"></a></h2>
+<hr class="footnotes docutils" />
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">2</a></span></dt>
+<dd><p>Please refer to <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html">Numpy napoleon example</a> and <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">Google napoleon example</a> for a template of in code documentation.
+If you are using VSCode consider installing <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring">autoDocstring</a> extension to automatically generate docstring.
+in order to autogenerate the docstring for your repository. Make sure to use <a class="reference external" href="https://docs.python.org/3/library/typing.html">typing</a> before you use autoDocstring in order to automatically generate the input and output information on docstring.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="git.html" class="btn btn-neutral float-left" title="git Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Majid Kamyab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
