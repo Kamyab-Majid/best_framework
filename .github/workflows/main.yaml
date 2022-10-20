@@ -9,10 +9,6 @@ build:
 env:
   DEP_PATH: requirements_dev.txt
 jobs:
-  run-linters:
-    name: Run linters
-    runs-on: ubuntu-latest
-
   steps:
     - name: Install Python dependencies
       uses: py-actions/py-dependency-install@v3
