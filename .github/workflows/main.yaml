@@ -1,14 +1,15 @@
 name: CI
 on: [push]
-build:
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      os: [ ubuntu-latest, macos-latest ]
-      python-version: ['3.10.6' ]
+
 env:
   DEP_PATH: requirements_dev.txt
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        python-version: ['3.10.6' ]
   steps:
     - name: Install Python dependencies
       uses: py-actions/py-dependency-install@v3
