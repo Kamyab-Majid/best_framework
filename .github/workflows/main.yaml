@@ -40,7 +40,7 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements_dev.txt
       - name: Run black
         run: poetry run black . --check
       - name: Run isort
