@@ -13,49 +13,49 @@ jobs:
     name: Run linters
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Install Python dependencies
-        uses: py-actions/py-dependency-install@v3
-        with:
-      path: "path/to/requirements.txt"
-      - name: Check out Git repository
+  steps:
+    - name: Install Python dependencies
+      uses: py-actions/py-dependency-install@v3
+      with:
+    path: "path/to/requirements.txt"
+    - name: Check out Git repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install Python dependencies
+      run: pip install black flake8
+
+    - name: Run linters
+      uses: wearerequired/lint-action@v2
+      with:
+        auto_fix: true
+        black: true
+        black_auto_fix: true
+        flake8: true
+        flake8_auto_fix: false
+      - name: Check out master
         uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - name: Security vulnerabilities scan #https://github.com/marketplace/actions/python-safety-check
+        uses: aufdenpunkt/python-safety-check
         with:
-          python-version: 3.8
+          safety_args: '-i 35015'
+          scan_requirements_file_only: 'true'
+    - uses: actions/checkout@v2
 
-      - name: Install Python dependencies
-        run: pip install black flake8
+    - name: Security check - Bandit
+      uses: ./
+      with:
+        python_version: ${{ matrix.python-version }}
+        project_path: .
+        ignore_failure: true
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          auto_fix: true
-          black: true
-          black_auto_fix: true
-          flake8: true
-          flake8_auto_fix: false
-        - name: Check out master
-          uses: actions/checkout@v2
-        - name: Security vulnerabilities scan #https://github.com/marketplace/actions/python-safety-check
-          uses: aufdenpunkt/python-safety-check
-          with:
-            safety_args: '-i 35015'
-            scan_requirements_file_only: 'true'
-      - uses: actions/checkout@v2
-
-      - name: Security check - Bandit
-        uses: ./
-        with:
-          python_version: ${{ matrix.python-version }}
-          project_path: .
-          ignore_failure: true
-
-      - name: Security check report artifacts
-        uses: actions/upload-artifact@v1
-        # if: failure()
-        with:
-          name: Security report
-          path: output/security_report.txt
+    - name: Security check report artifacts
+      uses: actions/upload-artifact@v1
+      # if: failure()
+      with:
+        name: Security report
+        path: output/security_report.txt
