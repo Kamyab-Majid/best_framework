@@ -25,15 +25,14 @@ jobs:
 
     - name: Install Python dependencies
       run: pip install black flake8
-
     - name: Run linters
-      uses: wearerequired/lint-action@v2
-      with:
-        auto_fix: true
-        black: true
-        black_auto_fix: true
-        flake8: true
-        flake8_auto_fix: false
+        uses: wearerequired/lint-action@v2
+        with:
+          auto_fix: true
+          black: true
+          black_auto_fix: true
+          flake8: true
+          flake8_auto_fix: false
       - name: Check out master
         uses: actions/checkout@v2
       - name: Security vulnerabilities scan #https://github.com/marketplace/actions/python-safety-check
