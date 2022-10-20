@@ -1,57 +1,23 @@
-name: CI
-on: [push]
+name: Python package
 
-env:
-  DEP_PATH: requirements_dev.txt
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches: 
+      - main
+      - dev
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest ]
-        python-version: ['3.10.6' ]
-  steps:
-    - name: Install Python dependencies
-      uses: py-actions/py-dependency-install@v3
-      with:
-        path: "requirements_dev.txt"
-    - name: Check out Git repository
-      uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
 
-    - name: Install Python dependencies
-      run: pip install black flake8
-    - name: Run linters
-      uses: wearerequired/lint-action@v2
-      with:
-        auto_fix: true
-        black: true
-        black_auto_fix: true
-        flake8: true
-        flake8_auto_fix: false
-      - name: Check out master
-        uses: actions/checkout@v2
-      - name: Security vulnerabilities scan #https://github.com/marketplace/actions/python-safety-check
-        uses: aufdenpunkt/python-safety-check
-        with:
-          safety_args: '-i 35015'
-          scan_requirements_file_only: 'true'
-    - uses: actions/checkout@v2
+# specify a path
+  uses: jpetrucciani/bandit-check@master
+  with:
+    path: '.'
 
-    - name: Security check - Bandit
-      uses: ./
-      with:
-        python_version: ${{ matrix.python-version }}
-        project_path: .
-        ignore_failure: true
-
-    - name: Security check report artifacts
-      uses: actions/upload-artifact@v1
-      # if: failure()
-      with:
-        name: Security report
-        path: output/security_report.txt
+  # provide some flags
+  uses: jpetrucciani/bandit-check@master
+  with:
+    bandit_flags: '-lll -o output.json -f json'
