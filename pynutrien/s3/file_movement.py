@@ -24,11 +24,11 @@ class GeneralFileSystem:
             protocol_2 (str, optional): _description_. Defaults to 's3'.
         """
         self.s3_fs = fsspec.filesystem(
-            protocol=protocol,
+            protocol=protocol_1,
             key=S3_KEY, secret=S3_SECRET
         )
         self.local = fsspec.filesystem(
-            protocol='file',
+            protocol=protocol_2,
         )  # asynchronous=True
 
 
