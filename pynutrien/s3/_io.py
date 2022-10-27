@@ -5,8 +5,8 @@ import pickle
 
 import pandas as pd
 
-from dna_util.io import _s3 as s3
-from dna_util.io import _local as local
+from . import _s3 as s3
+from . import _local as local
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import s3fs
 
-from dna_util.io import _local as local
+from . import _local as local
 
 logger = logging.getLogger(__name__)
 
