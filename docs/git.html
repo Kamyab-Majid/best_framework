@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="English" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>git Documentation &mdash; python library repository 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sphinx documentation" href="sphinx.html" />
+    <link rel="prev" title="Makefile Documentation" href="makefile.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> python library repository
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coding.html">Coding Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="makefile.html">Makefile Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">git Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-the-ssh-keys">setting up the SSH keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#branching-strategy">Branching Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#merge-strategy">Merge Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#merging-to-master-branch-procedure">Merging to master branch procedure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#commit-strategy">Commit Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sphinx.html">Sphinx documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pynutrien</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">python library repository</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>git Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/git.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="git-documentation">
+<h1>git Documentation<a class="headerlink" href="#git-documentation" title="Permalink to this heading"></a></h1>
+<p>In this document, we go through the best practices when using git.</p>
+<section id="setting-up-the-ssh-keys">
+<h2>setting up the SSH keys<a class="headerlink" href="#setting-up-the-ssh-keys" title="Permalink to this heading"></a></h2>
+<p>Use <a class="reference external" href="https://github.com/settings/keys">GitHub SSH key setting</a> to set up your SSH key to use. After you have done setting it up, you should be able to clone, push, etc. Make sure to use the SSH link when you are interacting with GitHub repositories.</p>
+</section>
+<section id="branching-strategy">
+<h2>Branching Strategy<a class="headerlink" href="#branching-strategy" title="Permalink to this heading"></a></h2>
+<p>Each user should work on their branch (other than main/master) and avoid conflicts, it is recommended that each person works on different files to avoid conflicts.</p>
+</section>
+<section id="merge-strategy">
+<h2>Merge Strategy<a class="headerlink" href="#merge-strategy" title="Permalink to this heading"></a></h2>
+<p>No merging to master should be directly allowed. Each merging to master should be done through a pull request<a class="footnote-reference brackets" href="#id4" id="id1">1</a>. In which the changes are reviewed by the lead<a class="footnote-reference brackets" href="#id5" id="id2">2</a>. If the master is ahead of the branch, use git rebase first, and then merge into master.</p>
+<section id="merging-to-master-branch-procedure">
+<h3>Merging to master branch procedure<a class="headerlink" href="#merging-to-master-branch-procedure" title="Permalink to this heading"></a></h3>
+<p>If you are using Visual Studio Code you can change git editor by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git config --global core.editor <span class="s2">&quot;code --wait&quot;</span>
+</pre></div>
+</div>
+<p>In case you are using Pycharm consider using <a class="reference external" href="https://www.jetbrains.com/help/pycharm/apply-changes-from-one-branch-to-another.html#rebase-branch">Pycharm rebase documentation</a>. You can change <code class="docutils literal notranslate"><span class="pre">code</span></code> with the editor of your choice <a class="footnote-reference brackets" href="#id6" id="id3">3</a>. The proposed merging procedure is given below:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git switch to_be_merged_branch
+git pull
+git rebase master -i
+git push --force
+</pre></div>
+</div>
+<p>In the <a class="reference external" href="https://git-scm.com/docs/git-rebase">rebase</a> step, try to clean the commit history of your code. In the next step open GitHub and open a pull request and add the respective reviewers.</p>
+</section>
+</section>
+<section id="commit-strategy">
+<h2>Commit Strategy<a class="headerlink" href="#commit-strategy" title="Permalink to this heading"></a></h2>
+<p>Commit messages should follow one of the followings:</p>
+<ul class="simple">
+<li><p><strong>feat</strong>: A new feature</p></li>
+<li><p><strong>fix</strong>: A bug fix</p></li>
+<li><p><strong>style</strong>: Additions or modifications related to styling only</p></li>
+<li><p><strong>refactor</strong>: Code refactoring</p></li>
+<li><p><strong>test</strong>: Additions or modifications to test cases</p></li>
+<li><p><strong>docs</strong>: README, Architectural, or anything related to - documentation</p></li>
+<li><p><strong>chore</strong>: Regular code maintenance</p></li>
+</ul>
+<hr class="footnotes docutils" />
+<dl class="footnote brackets">
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Please refer to <a class="reference external" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request">pull request tutorial</a> for more details about pull request.</p>
+</dd>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Please look at <a class="reference external" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/requesting-a-pull-request-review">add reviewer tutorial</a> for more details about adding reviewer to a pull request.</p>
+</dd>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>For more configuration of git please refer to <a class="reference external" href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration">git configuration</a></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="makefile.html" class="btn btn-neutral float-left" title="Makefile Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sphinx.html" class="btn btn-neutral float-right" title="Sphinx documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Majid Kamyab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
