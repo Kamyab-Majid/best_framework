@@ -1,0 +1,9 @@
+[submodule "examples/example-pipeline"]
+	path = examples/example-pipeline
+	url = https://github.com/Nutrien/insights-framework-example-pipeline
+[submodule "template"]
+	path = template
+	url = https://github.com/Nutrien/insights-framework-template
+[submodule "devops"]
+	path = devops
+	url = https://github.com/Nutrien/insights-devops
