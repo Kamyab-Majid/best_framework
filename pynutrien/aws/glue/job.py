@@ -1,3 +1,95 @@
-# This may integrate with CDK, or might be just a helper
-class GlueJob:
-    pass
+import sys
+import json
+
+from abc import abstractmethod
+from awsglue.context import GlueContext
+from awsglue.job import Job
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+
+from pynutrien.etl.base import ETLExtendedBase
+
+__all__ = ['GlueJob', 'BasicGlueJob', 'GlueSparkContext']
+
+
+class GlueSparkContext:
+
+    def __init__(self):
+        self.spark_context = SparkContext.getOrCreate()
+        # self.glue_context = GlueContext.getOrCreate(self.spark_context) ## Not working correctly
+        self.glue_context = GlueContext(self.spark_context)
+        self.spark_session = self.glue_context.spark_session
+        self.job = Job(self.glue_context)
+
+
+class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
+    # job_name = "TEST"  # REMOVE
+    # arguments = []
+    @property
+    @abstractmethod
+    def arguments(self):
+        raise NotImplementedError
+
+    def __init__(self, **kwargs):
+        GlueSparkContext.__init__(self)
+        ETLExtendedBase.__init__(self, self.job_name, **kwargs)
+        # self.arg_parser = argparse.ArgumentParser()
+
+    def setup_arguments(self):
+        # glue_args = getResolvedOptions(sys.argv, self.arguments)
+        # args, unknown = self.arg_parser.parse_known_args(args=sys.argv)
+        # self.args = {**glue_args, **dict(vars(args))}
+
+        # All arguments are mandatory
+        self.args = getResolvedOptions(sys.argv, self.arguments)
+
+    def setup(self):
+        self.setup_arguments()
+        self.logger.info(f"Supplied Arguments: {sys.argv!r}")
+        self.logger.info(f"Parsed Arguments: {self.args!r}")
+        self.logger.info(f"Available Modules: {sys.modules!r}")
+        self.logger.info(f"Spark Config: {self.spark_context.getConf().getAll()!r}")
+        self.job.init(self.job_name, self.args)
+
+    def cleanup(self):
+        self.job.commit()
+
+
+class GlueJob(BasicGlueJob):
+    # Should use --files with spark-submit
+    # or include extra-files with a file named config.json and env.json
+    _config_args = ['env_file_name', 'cfg_file_name']
+
+    def __init__(self, **kwargs):
+        # may be implemented as property (cannot use +=)
+        self.arguments = self.arguments + self._config_args
+        super().__init__(**kwargs)
+
+    # TODO config reader
+    @classmethod
+    def read_config(cls, path):
+        # TODO use s3/config module
+        return json.loads(path)  # open file first
+
+    # TODO config reader
+    @classmethod
+    def read_env(cls, path):
+        return cls.read_config(path)
+
+    def setup(self):
+        super().setup()
+        env = self.read_env(self.args['env_file_path'])
+        self.logger.info(f"Parsed Env: {env!r}")
+        config = self.read_config(self.args['cfg_file_path'])
+        self.logger.info(f"Parsed Config: {config!r}")
+        self.args = {**env, **config, **self.args}
+
+
+if __name__ == "__main__":
+
+    class MyGlueJob(GlueJob):
+        job_name = 'TEST_GLUE'
+        arguments = ['abc']
+        def extract(self): pass
+        def transform(self): pass
+        def load(self): pass
