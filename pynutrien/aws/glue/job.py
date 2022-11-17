@@ -58,7 +58,7 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
 class GlueJob(BasicGlueJob):
     # Should use --files with spark-submit
     # or include extra-files with a file named config.json and env.json
-    _config_args = ['env_file_name', 'cfg_file_name']
+    _config_args = ['env_file_path', 'cfg_file_path']
 
     def __init__(self, **kwargs):
         # may be implemented as property (cannot use +=)
@@ -69,7 +69,7 @@ class GlueJob(BasicGlueJob):
     @classmethod
     def read_config(cls, path):
         # TODO use s3/config module
-        return json.loads(path)  # open file first
+        return {}
 
     # TODO config reader
     @classmethod
@@ -93,3 +93,5 @@ if __name__ == "__main__":
         def extract(self): pass
         def transform(self): pass
         def load(self): pass
+    job = MyGlueJob()
+    job.run()

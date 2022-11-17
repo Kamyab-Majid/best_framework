@@ -105,7 +105,7 @@ servedocs: docs ## compile the docs watching for changes. Usage:  use it wheneve
 
 
 
-release: dist ## package and upload a release
+release: dist glue_zip lambda_zip ## package and upload a release
 	twine upload dist/*
 
 dist: clean ## builds source and wheel package
@@ -118,3 +118,25 @@ install: clean ## install the package to the active Python's site-packages
 pause: ##pause for 10 seconds
 	sleep 1
 done: test pause test-all pause security pause docs doc_type=html lint release
+
+glue_zip:
+	mkdir -p wheel_dir/python
+	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
+	pip wheel --wheel-dir=wheel_dir/python -r glue_requirements.txt
+	for z in wheel_dir/python/*.whl; do unzip $$z -d wheel_dir/python; done
+	find wheel_dir/python -type f -iname "*.whl" -exec rm -rf {} +
+	cd wheel_dir/python/; zip glue_zip * -r
+	mv wheel_dir/python/glue_zip.zip dist/glue_zip.zip 
+	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
+	rm -r -f wheel_dir
+lambda_zip:
+	mkdir -p wheel_dir/python
+	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
+	pip wheel --wheel-dir=wheel_dir/python -r lambda_requirements.txt
+	for z in wheel_dir/python/*.whl; do unzip $$z -d wheel_dir/python; done
+	find wheel_dir/python -type f -iname "*.whl" -exec rm -rf {} +
+	cd wheel_dir/; zip lambda_layer * -r
+	mv wheel_dir/lambda_layer.zip dist/lambda_layer.zip 
+	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
+	rm -r -f wheel_dir
+
