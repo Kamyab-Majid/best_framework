@@ -9,11 +9,10 @@ from pyspark.context import SparkContext
 
 from pynutrien.etl.base import ETLExtendedBase
 
-__all__ = ['GlueJob', 'BasicGlueJob', 'GlueSparkContext']
+__all__ = ["GlueJob", "BasicGlueJob", "GlueSparkContext"]
 
 
 class GlueSparkContext:
-
     def __init__(self):
         self.spark_context = SparkContext.getOrCreate()
         # self.glue_context = GlueContext.getOrCreate(self.spark_context) ## Not working correctly
@@ -58,7 +57,7 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
 class GlueJob(BasicGlueJob):
     # Should use --files with spark-submit
     # or include extra-files with a file named config.json and env.json
-    _config_args = ['env_file_path', 'cfg_file_path']
+    _config_args = ["env_file_path", "cfg_file_path"]
 
     def __init__(self, **kwargs):
         # may be implemented as property (cannot use +=)
@@ -78,9 +77,9 @@ class GlueJob(BasicGlueJob):
 
     def setup(self):
         super().setup()
-        env = self.read_env(self.args['env_file_path'])
+        env = self.read_env(self.args["env_file_path"])
         self.logger.info(f"Parsed Env: {env!r}")
-        config = self.read_config(self.args['cfg_file_path'])
+        config = self.read_config(self.args["cfg_file_path"])
         self.logger.info(f"Parsed Config: {config!r}")
         self.args = {**env, **config, **self.args}
 
@@ -88,10 +87,17 @@ class GlueJob(BasicGlueJob):
 if __name__ == "__main__":
 
     class MyGlueJob(GlueJob):
-        job_name = 'TEST_GLUE'
-        arguments = ['abc']
-        def extract(self): pass
-        def transform(self): pass
-        def load(self): pass
+        job_name = "TEST_GLUE"
+        arguments = ["abc"]
+
+        def extract(self):
+            pass
+
+        def transform(self):
+            pass
+
+        def load(self):
+            pass
+
     job = MyGlueJob()
     job.run()

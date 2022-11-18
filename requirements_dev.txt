@@ -75,3 +75,4 @@ watchdog==2.1.9
 webencodings==0.5.1
 zipp==3.9.0
 isort==5.10.1
+pre-commit==2.20.0
