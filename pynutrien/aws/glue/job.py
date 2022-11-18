@@ -8,6 +8,7 @@ from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 
 from pynutrien.etl.base import ETLExtendedBase
+from pynutrien.aws.glue.catalog import GlueReader, GlueWriter
 
 __all__ = ["GlueJob", "BasicGlueJob", "GlueSparkContext"]
 
@@ -28,6 +29,14 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
     @abstractmethod
     def arguments(self):
         raise NotImplementedError
+
+    @property
+    def read(self):
+        return GlueReader(self.glue_context, redshift_tmp_dir=self.args['RedshiftTempDir'])
+
+    @property
+    def write(self):
+        return GlueWriter(self.glue_context, redshift_tmp_dir=self.args['RedshiftTempDir'])
 
     def __init__(self, **kwargs):
         GlueSparkContext.__init__(self)
@@ -91,13 +100,20 @@ if __name__ == "__main__":
         arguments = ["abc"]
 
         def extract(self):
-            pass
+            self.read.catalog('database', 'table1').view('table1')
+            self.read.catalog('database', 'table2').view('table2')
 
         def transform(self):
-            pass
+            self.df = self.spark_session.sql("""
+                SELECT table1.a, table2.b
+                FROM table1 LEFT JOIN table2
+                ON table1.c = table2.c
+                WHERE table1.a = table1.d
+                AND table1.e IS NOT NULL
+            """)
 
         def load(self):
-            pass
+            self.write.catalog('database', 'table3').dataframe(self.df)
 
     job = MyGlueJob()
     job.run()
