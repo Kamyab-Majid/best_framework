@@ -20,7 +20,6 @@ class GlueSparkContext:
         # self.glue_context = GlueContext.getOrCreate(self.spark_context) ## Not working correctly
         self.glue_context = GlueContext(self.spark_context)
         self.spark_session = self.glue_context.spark_session
-        self.job = Job(self.glue_context)
 
 
 class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
@@ -46,6 +45,7 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
         """Initiating GlueSparkContext and ETLExtendedBase."""
         GlueSparkContext.__init__(self)
         ETLExtendedBase.__init__(self, self.job_name, **kwargs)
+        self.job = Job(self.glue_context)
         # self.arg_parser = argparse.ArgumentParser()
 
     def setup_arguments(self):
@@ -62,7 +62,8 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
         self.setup_arguments()
         self.logger.info(f"Supplied Arguments: {sys.argv!r}")
         self.logger.info(f"Parsed Arguments: {self.args!r}")
-        self.logger.info(f"Available Modules: {sys.modules!r}")
+        #self.logger.info(f"Available Modules: {sys.modules!r}")
+        # TODO show shared library version
         self.logger.info(f"Spark Config: {self.spark_context.getConf().getAll()!r}")
         self.job.init(self.job_name, self.args)
 
