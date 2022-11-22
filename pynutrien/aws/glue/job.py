@@ -1,6 +1,6 @@
 import sys
 import json
-
+from abc import ABCMeta
 from abc import abstractmethod
 from awsglue.context import GlueContext
 from awsglue.job import Job
@@ -15,6 +15,7 @@ __all__ = ["GlueJob", "BasicGlueJob", "GlueSparkContext"]
 
 class GlueSparkContext:
     def __init__(self):
+        """initiating glue_context for a glue job"""
         self.spark_context = SparkContext.getOrCreate()
         # self.glue_context = GlueContext.getOrCreate(self.spark_context) ## Not working correctly
         self.glue_context = GlueContext(self.spark_context)
@@ -23,11 +24,14 @@ class GlueSparkContext:
 
 
 class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
+    """an abstract class for an ETL job in glue."""
+
     # job_name = "TEST"  # REMOVE
     # arguments = []
     @property
     @abstractmethod
     def arguments(self):
+        """arguments to be passed to the glue job."""
         raise NotImplementedError
 
     @property
@@ -39,11 +43,13 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
         return GlueWriter(self.glue_context, redshift_tmp_dir=self.args['RedshiftTempDir'])
 
     def __init__(self, **kwargs):
+        """Initiating GlueSparkContext and ETLExtendedBase."""
         GlueSparkContext.__init__(self)
         ETLExtendedBase.__init__(self, self.job_name, **kwargs)
         # self.arg_parser = argparse.ArgumentParser()
 
     def setup_arguments(self):
+        """gettomg environment variables"""
         # glue_args = getResolvedOptions(sys.argv, self.arguments)
         # args, unknown = self.arg_parser.parse_known_args(args=sys.argv)
         # self.args = {**glue_args, **dict(vars(args))}
@@ -52,6 +58,7 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
         self.args = getResolvedOptions(sys.argv, self.arguments)
 
     def setup(self):
+        """logging the arguments and spark config."""
         self.setup_arguments()
         self.logger.info(f"Supplied Arguments: {sys.argv!r}")
         self.logger.info(f"Parsed Arguments: {self.args!r}")
@@ -60,10 +67,13 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
         self.job.init(self.job_name, self.args)
 
     def cleanup(self):
+        """commiting the job."""
         self.job.commit()
 
 
 class GlueJob(BasicGlueJob):
+    """A glue job with configuration for environment files and config file."""
+
     # Should use --files with spark-submit
     # or include extra-files with a file named config.json and env.json
     _config_args = ["env_file_path", "cfg_file_path"]
@@ -85,6 +95,7 @@ class GlueJob(BasicGlueJob):
         return cls.read_config(path)
 
     def setup(self):
+        """setting up the glue job given the file paths."""
         super().setup()
         env = self.read_env(self.args["env_file_path"])
         self.logger.info(f"Parsed Env: {env!r}")
