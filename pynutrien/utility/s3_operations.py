@@ -1,20 +1,41 @@
+# pylint: disable=missing-module-docstring, redefined-outer-name, missing-function-docstring, logging-fstring-interpolation, invalid-name, no-else-return, too-many-arguments
+
+from __future__ import annotations
+
 import logging
 from typing import Any
 
 import boto3
-
 import pandas as pd
-import pyspark.sql
-import s3fs  # pre-requisite for pandas to read from s3
+from botocore.exceptions import ClientError, ParamValidationError
 
-boto3.set_stream_logger('boto3.resources', logging.INFO)
+boto3.set_stream_logger("boto3.resources", logging.INFO)
 
 
 class S3Operations:
-    def __init__(self, session):
+    """
+    This class acts as a S3 module to let user perform certain operations on Amazon S3 services
+    including but not limited to:
+    - List all buckets currently in S3
+    - List all objects in a specific bucket
+    - Read an object
+    - Put an object
+    - Write an object from local
+    - Validate an object to see if it exists
+    - Copy/Move/Delete an object or all objects
+    """
+
+    def __init__(self, session) -> None:
+        """
+        A boto3 session is created once this class initializes taking the AWS access key and AWS
+        secret access key (stored in a dotenv(.env) file)
+        Args:
+            session: a boto3 session which takes in AWS access key ID and AWS secret access key ID
+            to get access to an AWS account
+        """
         self.session: boto3.session.Session = session
-        self.s3_resource: boto3.resources.factory.s3_resource.ServiceResource = self.session.resource(
-            "s3")
+        self.s3_resource: boto3.resources.factory.s3_resource.ServiceResource \
+            = self.session.resource("s3")
         self.s3_client = self.session.client("s3")
         self.s3_exceptions = (
             self.s3_resource.meta.client.exceptions.BucketAlreadyExists,
@@ -25,200 +46,471 @@ class S3Operations:
             self.s3_resource.meta.client.exceptions.NoSuchKey,
             self.s3_resource.meta.client.exceptions.NoSuchUpload,
             self.s3_resource.meta.client.exceptions.ObjectAlreadyInActiveTierError,
-            self.s3_resource.meta.client.exceptions.ObjectNotInActiveTierError)
+            self.s3_resource.meta.client.exceptions.ObjectNotInActiveTierError,
+        )
 
-    def list_buckets(self):
+    def list_buckets(self) -> list:
+        """
+        This method lists all the buckets available on Nutrien's S3 platform.
+
+        Raises:
+            RuntimeError: If the valid credentials are not entered
+            or if the role is not given the right permisisons.
+
+        Returns:
+            list: The list of all buckets name
+        """
         try:
             return list(self.s3_resource.buckets.all())
-        except self.s3_exceptions:
-            logging.exception("Could not list buckets due to client error")
+        except ClientError as exc:
+            raise RuntimeError("Could not list buckets due to client error") from exc
 
-    def list_all_objects(self, bucket):
+    def list_all_objects(self, bucket: str) -> list:
+        """
+        This method lists all the objects available on a specific bucket.
+
+        Args:
+            bucket (str): The name of the bucket where all objects to be listed
+
+        Raises:
+            RuntimeError: If the valid credentials are not entered
+            or if the role is not given the right permisisons.
+
+        Returns:
+            _type_: returns a list of objects in a bucket
+        """
         try:
-            return self.s3_resource.Bucket(bucket).objects.all()
-        except self.s3_exceptions:
-            logging.exception(
-                f"Could not list objects for {bucket} bucket.")
+            return list(self.s3_resource.Bucket(bucket).objects.all())
+        except ClientError as exc:
+            raise RuntimeError(f"Could not list objects for {bucket} bucket.") from exc
 
-    def read_object(self, s3_object_path: Any, df_type: str, file_type: str,
-                    spark: pyspark.sql.SparkSession = None, glueContext=None,
-                    **kwargs):
-        pandas_ = {"csv": pd.read_csv, "json": pd.read_json,
-                   "parquet": pd.read_parquet, "orc": pd.read_orc,
-                   "xml": pd.read_xml, "fwf": pd.read_fwf, "sas": pd.read_sas,
-                   "spss": pd.read_spss, "html": pd.read_html,
-                   "stata": pd.read_stata, "feather": pd.read_feather,
-                   "pickle": pd.read_pickle}
+    def read_object(self, s3_object_path: str, df_type: str, file_type: str,
+                    spark: "pyspark.sql.SparkSession" = None, glueContext=None, **kwargs):
+        """
+        This method reads a file in a bucket and converts to either a pandas df, spark df
+        or a DynamicDataframe.
+        (The spark and DynamicDataframe can only be called via a virtual env or glue end point.)
 
-        spark_ = {"parquet": spark.read.parquet, "orc": spark.read.orc,
-                  "json": spark.read.json, "csv": spark.read.csv,
-                  "text": spark.read.text, "avro": spark.read.avro}
+        Args:
+            s3_object_path (str): This is the s3 uri
+                (for spark and Glue, user needs to edit the uri to 's3a' instead of 's3')
+            df_type (str): pandas, spark or glue df type in quotes.
+            file_type (str): the file type in quotes eg: "csv"
+            spark (pyspark.sql.SparkSession, optional):
+                Define the spark session and read into the method in order to read directly
+                from the bucket. Defaults to None.
+            glueContext (optional): Define the glue_context spark_session and read into the method
+                in order to read directly from the bucket. Defaults to None.
 
-        if df_type == "pandas":
-            return pandas_[file_type](s3_object_path, **kwargs)
-        elif df_type == "spark":
-            return spark_[file_type](s3_object_path, **kwargs)
-        elif df_type == "glue":
-            return glueContext.create_dynamic_frame.from_options(
-                connection_type="s3",
-                connection_options={"paths": ["s3://s3path"]},
-                format=f"{file_type}",
-                format_options={
-                    **kwargs
-                },
-            )
+        Raises:
+            RuntimeError: when file format specified or s3 uri is incorrect
+        Returns:
+            a pandas, spark or Dynamic dataframe.
+        """
+        try:
+            if df_type == "pandas":
+                pandas_ = {
+                    "csv": pd.read_csv,
+                    "json": pd.read_json,
+                    "parquet": pd.read_parquet,
+                    "orc": pd.read_orc,
+                    "xml": pd.read_xml,
+                    "fwf": pd.read_fwf,
+                    "sas": pd.read_sas,
+                    "spss": pd.read_spss,
+                    "html": pd.read_html,
+                    "stata": pd.read_stata,
+                    "feather": pd.read_feather,
+                    "pickle": pd.read_pickle,
+                }
+                return pandas_[file_type](s3_object_path, **kwargs)
+            elif df_type == "spark":
+                spark_ = {
+                    "parquet": spark.read.parquet,
+                    "orc": spark.read.orc,
+                    "json": spark.read.json,
+                    "csv": spark.read.csv,
+                    "text": spark.read.text,
+                }
+                return spark_[file_type](s3_object_path, **kwargs)
+            elif df_type == "glue":
+                return glueContext.create_dynamic_frame.from_options(
+                    connection_type="s3",
+                    connection_options={"paths": [f"{s3_object_path}"]},
+                    format=f"{file_type}",
+                    format_options={**kwargs},
+                )
+            else:
+                raise NotImplementedError
+        except FileNotFoundError as exc:
+            raise RuntimeError(
+                "Please check if s3 uri is correct or if the file format is entered correctly!"
+            ) from exc
 
-    def put_object(self, data, bucket, key):
+    def put_object(self, data: Any, bucket: str, key: str) -> None:
+        """
+        This method takes the specified data on memory, the file name, bucket name
+        and stores the data into the s3 bucket.
+
+        Args:
+            data (Any): file on memory.
+            bucket (str): name of the bucket to upload file.
+            key (str): name of the file.
+        """
         try:
             object_ = self.s3_resource.Object(bucket, key)
             object_.put(Body=data)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Could not write data to {key} file in {bucket} bucket.")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not write data to {key} file in {bucket} bucket.") from exc
 
-    def validate_object(self, bucket, key):
+
+    def validate_object(self, bucket: str, key: str) -> bool:
+        """
+        Checks if the object exist within the bucket.
+
+        Args:
+            bucket (str): name of the bucket to check for the file.
+            key (str): name of the object to search for
+
+        Raises:
+            RuntimeError: if object cannot be validated
+        Returns:
+            bool: returns True if obect exist in the bucket.
+        """
         try:
             # Check if the object exists in target via GET request:
             self.s3_client.head_object(Bucket=bucket, Key=key)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Could not validate file {key} in {bucket} bucket.")
+            return True
+        except ClientError as exc:
+            raise RuntimeError(
+                f"Invalid Bucket/Key. Could not validate file '{key}' in '{bucket}' bucket."
+                ) from exc
 
-    def write_to_s3_from_local(self, bucket, file_path, s3_key,
-                               extra_args: dict = None, callback=None,
-                               config=None):
-        try:
-            self.s3_resource.Bucket(bucket).upload_file(file_path, s3_key, extra_args,
-                                                        callback, config)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Could not write {file_path} to {bucket} bucket.")
 
-    def move_object(self, source: dict, destination_bucket: str,
-                    destination_key: str):
+    def write_to_s3_from_local(
+        self,
+        bucket: str,
+        file_path: str,
+        s3_key: str,
+        extra_args: dict = None,
+        callback: function = None,
+        config: boto3.s3.transfer.TransferConfig =None
+    ) -> None:
+        """This method write a file from the local machine into the S3 bucket.
+
+        Args:
+            bucket (str): The name of the bucket to write to.
+            file_path (str): The path to the file to write.
+            s3_key (str): The name of the key to write to.
+            extra_args (dict, optional): Extra arguments that may be passed to the client operation.
+            For allowed upload arguments see boto3.s3.transfer.S3Transfer.ALLOWED_UPLOAD_ARGS.
+            Defaults to None.
+            callback (function, optional): A method which takes a number of bytes transferred
+            to be periodically called during the upload.
+            Defaults to None.
+            config (optional): The transfer configuration to be used when performing the transfer.
+            Defaults to None.
+
+        Raises:
+            RuntimeError: when local file cannot be written to S3
         """
+        try:
+            self.s3_resource.Bucket(bucket).upload_file(
+                file_path, s3_key, extra_args, callback, config)
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not write {file_path} to {bucket} bucket.") from exc
 
-        :param source: A dictionary contains {'Bucket', 'Key', 'VersionId'} keys and values. 'VersionId' is optional
-        :param destination_bucket: Name of the destination bucket
-        :param destination_key: Name of the destination key
+    def validate_bucket(self, bucket: str) -> bool:
+        """
+        This method validates if speficied bucket exist or not
+
+        Args:
+            bucket (str): Name of the bucket to be validated
+
+        Returns:
+            bool: whether it's True or False if the specified bucket exist
+        """
+        return self.s3_resource.Bucket(bucket) in self.list_buckets()
+
+    def move_object(
+        self, source: dict, destination_bucket: str, destination_key: str) -> None:
+        """
+        This method moves an object from a source bucket/key to a new bucket/key (copy then delete)
+        Args:
+            source (dict): A dictionary contains {'Bucket', 'Key', 'VersionId'} keys and values.
+            'VersionId' is optional
+            destination_bucket (str): Name of the destination bucket
+            destination_key (str): Name of the destination key
         """
         logging.info(
             "Move is not directly supported by boto3, we are performing copy and delete instead.")
         self.copy_object(source, destination_bucket, destination_key)
-        self.s3_resource.Object(source["Bucket"], source["Key"]).delete()
+        self.delete_object(source["Bucket"], source["Key"])
 
-    def copy_object(self, copy_source: dict, destination_bucket: str,
-                    destination_key: str):
+    def copy_object(
+        self, copy_source: dict, destination_bucket: str, destination_key: str) -> None:
         """
-        :param copy_source: A dictionary contains {'Bucket', 'Key', 'VersionId'} keys and values. 'VersionId' is optional
-        :param destination_bucket: Name of the destination bucket
-        :param destination_key: Name of the destination key
+        This method makes copy of an object from a source bucket/key and put it in a new destination
+        bucket/key
+        Args:
+            copy_source (dict): A dictionary contains {'Bucket', 'Key', 'VersionId'} keys & values.
+            'VersionId' is optional
+            destination_bucket (str): Name of the destination bucket
+            destination_key (str): Name of the destination key
         """
+        source_bckt = copy_source["Bucket"]
+        source_key = copy_source["Key"]
         try:
-            self.s3_resource.meta.client.copy(copy_source, destination_bucket,
-                                              destination_key)
+            self.validate_object(bucket=source_bckt, key=source_key)
+            self.s3_resource.meta.client.copy(copy_source, destination_bucket, destination_key)
             self.validate_object(destination_bucket, destination_key)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Could not copy {copy_source} to {destination_bucket} bucket for {destination_key} key.")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(
+                f"Could not copy {copy_source} to {destination_bucket} bucket for {destination_key} key."
+                ) from exc
 
-    def delete_object(self, bucket: str, key: str):
+    def delete_object(self, bucket: str, key: str) -> None:
+        """
+        This method deletes an object in a specified bucket with a specified key
+        Args:
+            bucket (str): Name of the bucket where object is located
+            key (str): Name of the object key
+        """
         try:
+            self.validate_object(bucket=bucket, key=key)
             self.s3_resource.Object(bucket, key).delete()
-        except self.s3_exceptions:
-            logging.exception(
-                f"Could not delete object {key} from {bucket} bucket.")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not delete object {key} from {bucket} bucket.") from exc
 
-    def delete_all_objects(self, bucket):
+    def delete_all_objects(self, bucket: str) -> None:
+        """
+        This method deletes all objects located in a specified bucket (empty the bucket)
+        Args:
+            bucket (str): Name of the bucket to be emptied
+        """
         try:
             objects = self.list_all_objects(bucket)
             for object_ in objects:
-                self.delete_object(bucket, object_)
-        except self.s3_exceptions:
-            logging.exception(f"Could not delete all the objects in {bucket}")
+                self.delete_object(bucket, object_.key)
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not delete all the objects in {bucket}") from exc
 
-    def move_all_objects(self, bucket, destination_bucket: str,
-                         destination_key: str):
+    def move_all_objects(
+        self, bucket: str, destination_bucket: str, destination_key: str = None) -> None:
+        """
+        This method moves all objects from a source bucket to a different location (bucket/key).
+        Make copy and empty the source ebucket
+        Args:
+            bucket (str): Name of the bucket where objects are located originally
+            destination_bucket (str): Name of the bucket where objects are to be moved into
+            destination_key (str, optional): Name of the folder/sub-folder (if applicable)
+            where objects are to be moved into within the specified bucket. Defaults to None.
+        """
+        try:
+            self.copy_all_objects(bucket, destination_bucket, destination_key)
+            self.delete_all_objects(bucket)
+        except self.s3_exceptions as exc:
+            raise RuntimeError(
+                f"Failed to move objects from {bucket} to {destination_bucket}") from exc
+
+    def copy_all_objects(
+        self, bucket: str, destination_bucket: str, destination_key: str = None) -> None:
+        """
+        This method makes copies of all objects in a specified source bucket and put them into a new
+        destination bucket/key without removing them from source
+        Args:
+            bucket (str): Name of the source bucket where objects are located
+            destination_bucket (str): Name of the destination bucket where objects are copied into
+            destination_key (str, optional): Name of the folder/sub-folder (if applicable) where
+            objects are to be copied into within the specified bucket. Defaults to None.
+        """
         try:
             objects = self.list_all_objects(bucket)
-            source = {"Bucket": bucket}
-            for object_ in objects:
-                source["Key"] = object_
-                self.move_object(source, destination_bucket,
-                                 destination_key)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Failed to move objects from {source['Bucket']} to {destination_bucket}")
-
-    def copy_all_objects(self, bucket, destination_bucket: str,
-                         destination_key: str):
-        try:
-            objects = self.list_all_objects(bucket)
-            source = {"Bucket": bucket}
-            for object_ in objects:
-                source["Key"] = object_
-                self.copy_object(source, destination_bucket, destination_key)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Failed to copy objects from {source['Bucket']} to {destination_bucket}")
-
-    def get_object_tag(self, bucket, key, **kwargs):
-        try:
-            return self.s3_client.get_object_tagging(Bucket=bucket, Key=key,
-                                                     **kwargs)
-        except self.s3_exceptions:
-            logging.exception(
-                f"Failed to get tag for {key} object in {bucket} bucket")
-
-    def add_object_tag(self, bucket, key, new_tag: dict, **kwargs):
-        response = self.get_object_tag(bucket, key, **kwargs)
-        response["TagSet"].append(new_tag)  # Python 3.5 >
-        self.set_object_tag(bucket, key, response["TagSet"])
-
-    def set_object_tag(self, bucket, key, tag_set: list):
-        self.s3_client.put_object_tagging(Bucket=bucket, Key=key,
-                                          Tagging={"TagSet": tag_set})
-
-    def delete_object_tag(self, bucket, key, tag: dict, **kwargs):
-        response = self.get_object_tag(bucket, key, **kwargs)
-        return_, new_tag_set = list(), list()
-        for dict_ in response["TagSet"]:
-            if dict_["Key"] != tag["Key"]:
-                new_tag_set.append(dict_)
+            if self.validate_bucket(destination_bucket):
+                source = {"Bucket": bucket}
+                for object_ in objects:
+                    source["Key"] = object_.key
+                    if destination_key and len(destination_key) > 0:
+                        self.copy_object(
+                            source,
+                            destination_bucket,
+                            destination_key + "/" + source["Key"],
+                        )
+                    else:
+                        self.copy_object(source, destination_bucket, source["Key"])
             else:
-                continue
+                raise RuntimeError(f"Bucket '{destination_bucket}' does not exist.")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(
+                f"Failed to copy objects from {bucket} to {destination_bucket}") from exc
 
-        self.set_object_tag(bucket, key, new_tag_set)
+    def get_object_tag(self, bucket: str, key: str, **kwargs) -> dict:
+        """This method gets all the tags exist in a specified object
 
-    def set_bucket_tag(self, bucket, **kwargs):
-        return self.s3_client.put_bucket_tagging(bucket, **kwargs)
+        Args:
+            bucket (str): Name of the bucket where object is located
+            key (str): Name of the key of the object
 
+        Returns:
+            dict: dictionary in which under key "TagSet" is a list of all key-value pairs for
+            existing tags
+        """
+        try:
+            self.validate_object(bucket=bucket, key=key)
+            return self.s3_client.get_object_tagging(Bucket=bucket, Key=key, **kwargs)
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Failed to get tag for {key} object in {bucket} bucket") from exc
 
-if __name__ == '__main__':
-    import configparser
-    config = configparser.ConfigParser()
-    config.read(".env")
-    session = boto3.Session(
-        aws_access_key_id=config["aws"]["aws_access_key_id"],
-        aws_secret_access_key=config["aws"]["aws_secret_access_key"])
+    def add_object_tag(self, bucket: str, key: str, new_tag: dict, **kwargs) -> None:
+        """This method adds a specific tag to a specified object
 
-    bucket_name = "insights-framework-test"
+        Args:
+            bucket (str): Name of the bucket where object is located
+            key (str): Name of the key of the object where tag needs to be set
+            new_tag (dict): A dictionary contains {'Key', 'Value'} keys and values
+            representing tag key and tag value
 
-    s3_operations = S3Operations(session)
+        Raises:
+            ValueError: when new_tag argument passed in does not include "Key" and "Value" keys
+        """
+        try:
+            if isinstance(new_tag, dict):
+                response = self.get_object_tag(bucket, key, **kwargs)
+                response["TagSet"].append(new_tag)
+                self.set_object_tag(bucket, key, response["TagSet"])
+            else:
+                raise TypeError(
+                    'new_tag argument must be a dictionary of "Key" and "Value" of tags to be added'
+                    )
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Failed to add tag for {key} object in {bucket} bucket") from exc
 
-    objects = s3_operations.list_all_objects(bucket_name)
-    for object_ in objects:
-        print(object_.key)
+    def delete_object_tag(self, bucket: str, key: str, tag: dict, **kwargs) -> None:
+        """This method deletes a specific tag in a specified object
 
-    print(len(s3_operations.list_buckets()))
+        Args:
+            bucket (str): Name of the bucket where object is located
+            key (str): Name of the key of the object where tag needs to be deleted
+            tag (dict): A dictionary contains {'Key', 'Value'} keys and values
+            representing tag key and tag value
 
-    copy_source = {"Bucket": bucket_name, "Key": "s3-subfolder/text.txt"}
-    s3_operations.copy_object(copy_source, bucket_name, "text.txt")
+        Raises:
+            RuntimeError: when the tag provided does not exist in the specified object
+        """
+        try:
+            self.validate_object(bucket=bucket, key=key)
+            object_tag_list = self.get_object_tag(bucket, key, **kwargs)["TagSet"]
+            if tag in object_tag_list:
+                new_tag_set = []
+                for dict_ in object_tag_list:
+                    if dict_["Key"] != tag["Key"]:
+                        new_tag_set.append(dict_)
+                    else:
+                        continue
+                self.set_object_tag(bucket, key, new_tag_set)
+            else:
+                raise RuntimeError("Tag to be deleted is not valid or not exist in current object")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(
+                f"Could not delete tag for object {key} in {bucket} bucket.") from exc
 
-    s3_operations.add_object_tag(bucket_name, "text.txt",
-                                 new_tag={"Key": "New_Key3",
-                                          "Value": "Value3"})
+    def set_object_tag(self, bucket: str, key: str, tag_set: list[dict]) -> None:
+        """This method set a list of tag for a specified object
 
-    s3_operations.delete_object_tag(bucket_name, "text.txt",
-                                    {"Key": "New_Key3",
-                                     "Value": "Value3"})
+        Args:
+            bucket (str): Name of the bucket where object is located
+            key (str): Name of the key of the object where tag needs to be set
+            tag_set (list[dict]): a list of all the tag set dictionary containing {"Key", "Value"}
+            keys and values representing tag key and tag value
+
+        Raises:
+            ValueError: when tag_set argument passed in is not list or tuple
+            ValueError: when tag_set argument passed in does not include "Key" and "Value" keys
+            ValueError: when tag_set argument passed in contain a tag Key that are duplicated
+        """
+        try:
+            self.validate_object(bucket=bucket, key=key)
+            if isinstance(tag_set, (list, tuple)):
+                try:
+                    self.s3_client.put_object_tagging(
+                        Bucket=bucket, Key=key, Tagging={"TagSet": tag_set})
+                except ParamValidationError as exc:
+                    raise ValueError(
+                        'tag_set argument must include dictionary of "Key" and "Value" of the tag'
+                    ) from exc
+                except ClientError as exc:
+                    raise ValueError(
+                        "Cannot have multiple Tags with the same key within an object") from exc
+            else:
+                raise TypeError(
+                    "tag_set argument must be a list or tuple of sets of tags to be added")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not set tag for object {key} in {bucket} bucket.") from exc
+
+    def set_bucket_tag(self, bucket: str, tag_set: list[dict], **kwargs) -> None:
+        """This method set up tags for the specified bucket given a set of tags
+
+        Args:
+            bucket (str): Name of the bucket where tags need to be set
+            tag_set (list[dict]): a list of all the tag set dictionary containing {"Key", "Value"}
+            keys and values representing tag key and tag value
+
+        Raises:
+            ValueError: when tag_set argument passed in is not list or tuple
+            ValueError: when tag_set argument passed in does not include "Key" and "Value" keys
+            ValueError: when tag_set argument passed in contain a tag Key that are duplicated
+        """
+        try:
+            if self.validate_bucket(bucket=bucket):
+                if isinstance(tag_set, (list, tuple)):
+                    try:
+                        self.s3_client.put_bucket_tagging(
+                            Bucket=bucket, Tagging={"TagSet": tag_set}, **kwargs)
+                    except ParamValidationError as exc:
+                        raise ValueError(
+                            'tag_set argument must have dictionary of "Key" and "Value" of the tag'
+                        ) from exc
+                    except ClientError as exc:
+                        raise ValueError(
+                            "Cannot have multiple Tags with the same key within an object") from exc
+                else:
+                    raise TypeError(
+                        "tag_set argument must be a list or tuple of sets of tags to be added")
+            else:
+                raise RuntimeError(f"Bucket '{bucket}' does not exist.")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not set tag for {bucket} bucket.") from exc
+
+    def get_bucket_tag(self, bucket: str, **kwargs) -> dict:
+        """This method gets all the tags exist in the specified bucket
+
+        Args:
+            bucket (str): Name of the bucket to get tags
+
+        Returns:
+            dict: dictionary in which under key "TagSet" is a list of all key-value pairs for
+            existing tags
+        """
+        try:
+            if self.validate_bucket(bucket=bucket):
+                return self.s3_client.get_bucket_tagging(Bucket=bucket, **kwargs)
+            else:
+                raise RuntimeError(f"Bucket '{bucket}' does not exist.")
+        except ClientError:
+            return {"TagSet": []}
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not get tag for {bucket} bucket.") from exc
+
+    def delete_bucket_tag(self, bucket: str, **kwargs) -> None:
+        """This method deletes all the tags of the specified bucket
+
+        Args:
+            bucket (str): Name of bucket to have all tags be delete
+        """
+        try:
+            if self.validate_bucket(bucket=bucket):
+                self.s3_client.delete_bucket_tagging(Bucket=bucket, **kwargs)
+            else:
+                raise RuntimeError(f"Bucket '{bucket}' does not exist.")
+        except self.s3_exceptions as exc:
+            raise RuntimeError(f"Could not delete tag for {bucket} bucket.") from exc
