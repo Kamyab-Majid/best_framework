@@ -1,0 +1,19 @@
+{
+    "fruit": {
+        "apple": {
+            "size": "small",
+            "color": "red",
+            "country": "USA"
+        },
+        "banana":{
+            "size": "medium",
+            "color": "yellow",
+            "country": "Fiji"
+        },
+        "orange":{
+            "size": "large",
+            "color": "orange",
+            "country": "Egypt"
+        
+    }
+}

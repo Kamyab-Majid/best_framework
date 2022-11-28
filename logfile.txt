@@ -1,0 +1,150 @@
+2022-11-23 15:43:40,855:INFO:Created file string: 
+    {
+    "fruit": {
+        "apple": {
+            "size": "small",
+            "color": "red",
+            "country": "USA"
+        },
+        "banana":{
+            "size": "medium",
+            "color": "yellow",
+            "country": "Fiji"
+        },
+        "orange":{
+            "size": "large",
+            "color": "orange",
+            "country": "Egypt"
+        }
+    }
+}
+    
+2022-11-23 15:43:40,856:INFO:Created file string: 
+        [apple]
+        size = small
+        color = red
+        country = USA
+    
+2022-11-23 15:43:40,856:INFO:Created file string: 
+        name: "Vishvajit"
+        age: 23
+        address: Noida
+        Occupation: Software Developer
+        Skills:
+        - Python
+        - Django
+        - Flask
+        - FastAPI
+        - DRF ( Django Rest Framework )
+    
+2022-11-23 15:43:40,856:INFO:Created file string: 
+        [user]
+        player_x.color = "blue"
+        player_o.color = "green"
+
+        [constant]
+        board_size = 3
+
+        [server]
+        url = "https://tictactoe.example.com"
+    
+2022-11-23 15:47:46,393:INFO:Created file string: 
+    {
+    "fruit": {
+        "apple": {
+            "size": "small",
+            "color": "red",
+            "country": "USA"
+        },
+        "banana":{
+            "size": "medium",
+            "color": "yellow",
+            "country": "Fiji"
+        },
+        "orange":{
+            "size": "large",
+            "color": "orange",
+            "country": "Egypt"
+        }
+    }
+}
+    
+2022-11-23 15:47:46,394:INFO:Created file string: 
+        [apple]
+        size = small
+        color = red
+        country = USA
+    
+2022-11-23 15:47:46,394:INFO:Created file string: 
+        name: "Vishvajit"
+        age: 23
+        address: Noida
+        Occupation: Software Developer
+        Skills:
+        - Python
+        - Django
+        - Flask
+        - FastAPI
+        - DRF ( Django Rest Framework )
+    
+2022-11-23 15:47:46,394:INFO:Created file string: 
+        [user]
+        player_x.color = "blue"
+        player_o.color = "green"
+
+        [constant]
+        board_size = 3
+
+        [server]
+        url = "https://tictactoe.example.com"
+    
+2022-11-23 15:50:43,481:INFO:Created file string: 
+    {
+    "fruit": {
+        "apple": {
+            "size": "small",
+            "color": "red",
+            "country": "USA"
+        },
+        "banana":{
+            "size": "medium",
+            "color": "yellow",
+            "country": "Fiji"
+        },
+        "orange":{
+            "size": "large",
+            "color": "orange",
+            "country": "Egypt"
+        }
+    }
+}
+    
+2022-11-23 15:50:43,481:INFO:Created file string: 
+        [apple]
+        size = small
+        color = red
+        country = USA
+    
+2022-11-23 15:50:43,481:INFO:Created file string: 
+        name: "Vishvajit"
+        age: 23
+        address: Noida
+        Occupation: Software Developer
+        Skills:
+        - Python
+        - Django
+        - Flask
+        - FastAPI
+        - DRF ( Django Rest Framework )
+    
+2022-11-23 15:50:43,481:INFO:Created file string: 
+        [user]
+        player_x.color = "blue"
+        player_o.color = "green"
+
+        [constant]
+        board_size = 3
+
+        [server]
+        url = "https://tictactoe.example.com"
+    

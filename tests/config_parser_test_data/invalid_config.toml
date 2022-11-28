@@ -1,0 +1,9 @@
+[user]
+player_x.color = "blue"
+player_o.color = "green"
+
+[constant]
+board_size
+
+[server]
+url = "https://tictactoe.example.com"
