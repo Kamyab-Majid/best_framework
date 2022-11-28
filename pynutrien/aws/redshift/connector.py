@@ -92,7 +92,7 @@ class RedshiftConnector:
                 host=self.host,
                 database=self.database,
                 user=self.user,
-                password=self.password
+                password=self.password,
             )
         raise RuntimeError(
             "Missing required arguments. Please make sure arguments and values exist for \
@@ -119,7 +119,7 @@ class RedshiftConnector:
                 password=self.password,
                 user=self.user,
                 cluster_identifier=self.cluster_identifier,
-                profile=self.profile
+                profile=self.profile,
             )
         raise RuntimeError(
             "Missing required arguments. Please make sure arguments and values exist for \

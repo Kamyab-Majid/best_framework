@@ -3,8 +3,6 @@ from awsglue import DynamicFrame
 
 
 class GlueIO:
-    """This is the class that initializes the dynamicFrame."""
-
     def __init__(self, glue_context, redshift_tmp_dir=None):
         """
         This is the init method that initializes GlueIO object to read datacatalog

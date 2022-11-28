@@ -35,11 +35,15 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
 
     @property
     def read(self):
-        return GlueReader(self.glue_context, redshift_tmp_dir=self.args['RedshiftTempDir'])
+        return GlueReader(
+            self.glue_context, redshift_tmp_dir=self.args["RedshiftTempDir"]
+        )
 
     @property
     def write(self):
-        return GlueWriter(self.glue_context, redshift_tmp_dir=self.args['RedshiftTempDir'])
+        return GlueWriter(
+            self.glue_context, redshift_tmp_dir=self.args["RedshiftTempDir"]
+        )
 
     def __init__(self, **kwargs):
         """Initiating GlueSparkContext and ETLExtendedBase."""
@@ -62,7 +66,7 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
         self.setup_arguments()
         self.logger.info(f"Supplied Arguments: {sys.argv!r}")
         self.logger.info(f"Parsed Arguments: {self.args!r}")
-        #self.logger.info(f"Available Modules: {sys.modules!r}")
+        # self.logger.info(f"Available Modules: {sys.modules!r}")
         # TODO show shared library version
         self.logger.info(f"Spark Config: {self.spark_context.getConf().getAll()!r}")
         self.job.init(self.job_name, self.args)
@@ -111,21 +115,40 @@ if __name__ == "__main__":
         job_name = "TEST_GLUE"
         arguments = ["abc"]
 
-        def extract(self):
-            self.read.catalog('database', 'table1').view('table1')
-            self.read.catalog('database', 'table2').view('table2')
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
 
-        def transform(self):
-            self.df = self.spark_session.sql("""
-                SELECT table1.a, table2.b
-                FROM table1 LEFT JOIN table2
-                ON table1.c = table2.c
-                WHERE table1.a = table1.d
-                AND table1.e IS NOT NULL
-            """)
+            if "--JOB_NAME" in sys.argv:
+                self.arguments.append("JOB_NAME")
+            args = getResolvedOptions(sys.argv, self.arguments)
 
-        def load(self):
-            self.write.catalog('database', 'table3').dataframe(self.df)
+            self.job = Job(self.glue_context)
+
+            if "JOB_NAME" in args:
+                jobname = args["JOB_NAME"]
+            else:
+                jobname = "test"
+            self.job.init(jobname, args)
+
+        def extract(
+            self, path="s3://awsglue-datasets/examples/us-legislators/all/persons.json"
+        ):
+            self.dynamicframe = self.glue_context.create_dynamic_frame.from_options(
+                connection_type="s3",
+                connection_options={"paths": [path], "recurse": True},
+                format="json",
+            )
+            self.job.commit()
+
+        def transform(
+            self,
+        ):
+            pass
+
+        def load(
+            self,
+        ):
+            pass
 
     job = MyGlueJob()
     job.run()

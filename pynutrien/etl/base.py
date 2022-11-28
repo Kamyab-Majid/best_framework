@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from pynutrien.logger import Logger, RuntimeLogger
 
-__all__ = ['ETLBase', 'ETLExtendedBase']
+__all__ = ["ETLBase", "ETLExtendedBase"]
 
 
 class ETLBase(ABC):
 
-    _function_call_order = ['extract', 'transform', 'load']
+    _function_call_order = ["extract", "transform", "load"]
     _current_state = None
 
     def __init__(self, *args, **kwargs):
@@ -41,37 +41,50 @@ class ETLBase(ABC):
 
 class ETLExtendedBase(ETLBase):
     _function_call_order = [
-        'setup',
-        'pre_extract', 'extract', 'post_extract',
-        'pre_transform', 'transform', 'post_transform',
-        'pre_load', 'load', 'post_load',
-        'cleanup'
+        "setup",
+        "pre_extract",
+        "extract",
+        "post_extract",
+        "pre_transform",
+        "transform",
+        "post_transform",
+        "pre_load",
+        "load",
+        "post_load",
+        "cleanup",
     ]
 
 
 if __name__ == "__main__":
 
     class TestETL1(ETLExtendedBase):
-        job_name = 'TEST_ETL_1'
+        job_name = "TEST_ETL_1"
 
-        def setup(self): pass
+        def setup(self):
+            pass
 
-        def extract(self): pass
+        def extract(self):
+            pass
 
-        def transform(self): pass
+        def transform(self):
+            pass
 
-        def load(self): pass
+        def load(self):
+            pass
 
     class TestETL2(ETLExtendedBase):
-        job_name = 'TEST_ETL_2'
+        job_name = "TEST_ETL_2"
 
         # def job_name(self): pass
 
-        def extract(self): pass
+        def extract(self):
+            pass
 
-        def transform(self): raise Exception("Test")
+        def transform(self):
+            raise Exception("Test")
 
-        def load(self): pass
+        def load(self):
+            pass
 
     j1 = TestETL1()
     j1.run()

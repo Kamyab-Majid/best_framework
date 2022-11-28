@@ -11,7 +11,9 @@ from awsglue.dynamicframe import DynamicFrame
 import pandas as pd
 
 
-def delegate_df(df: Any, new_format: str, date_column: str = None, glue_context=None) -> None:
+def delegate_df(
+    df: Any, new_format: str, date_column: str = None, glue_context=None
+) -> None:
     """
     This function determines the type of the dataframe passed in and delegate the specified
     column/object to a new desired date format
@@ -41,23 +43,30 @@ def delegate_df(df: Any, new_format: str, date_column: str = None, glue_context=
     """
     if isinstance(df, pandas_data_frame):
         if date_column is None:
-            raise TypeError("'date_column' argument is required to delegate Pandas dataframe")
+            raise TypeError(
+                "'date_column' argument is required to delegate Pandas dataframe"
+            )
         return format_pandas_datetime(df, date_column, new_format)
     elif isinstance(df, spark_data_frame):
         if date_column is None:
-            raise TypeError("'date_column' argument is required to delegate Spark dataframe")
+            raise TypeError(
+                "'date_column' argument is required to delegate Spark dataframe"
+            )
         return format_spark_datetime(df, date_column, new_format)
     elif isinstance(df, DynamicFrame):
         if date_column is None or glue_context is None:
-            raise TypeError('Missing required argument ("date_column" or "glue_context")\
-                 to delegate dynamic dataframe')
+            raise TypeError(
+                'Missing required argument ("date_column" or "glue_context")\
+                 to delegate dynamic dataframe'
+            )
         return format_dynamicframe_datetime(df, date_column, new_format, glue_context)
     else:
         return format_python_datetime(df, new_format)
 
 
-def format_pandas_datetime(df: pandas_data_frame, date_column: str, new_format: str) \
-    -> pandas_data_frame:
+def format_pandas_datetime(
+    df: pandas_data_frame, date_column: str, new_format: str
+) -> pandas_data_frame:
     """
     This function specifically formats the datetime of the values from a specified column
     in a Pandas dataframe to the new date format desired
@@ -80,21 +89,26 @@ def format_pandas_datetime(df: pandas_data_frame, date_column: str, new_format: 
         df[date_column] = df[date_column].dt.strftime(new_format)
     except AttributeError:
         try:
-            df[date_column] = pd.to_datetime(df[date_column], errors='raise')
+            df[date_column] = pd.to_datetime(df[date_column], errors="raise")
             df[date_column] = df[date_column].dt.strftime(new_format)
         except ValueError:
-            raise ValueError(f"Value from column '{date_column}' \
-                is not an appropriate datetime type")
+            raise ValueError(
+                f"Value from column '{date_column}' \
+                is not an appropriate datetime type"
+            )
     try:
-        pd.to_datetime(df[date_column], errors='raise')
+        pd.to_datetime(df[date_column], errors="raise")
     except parser.ParserError:
-        raise ValueError(f'The new_format argument "{new_format}" \
-            passed in does not follow standard date format codes')
+        raise ValueError(
+            f'The new_format argument "{new_format}" \
+            passed in does not follow standard date format codes'
+        )
     return df
 
 
-def format_spark_datetime(df: spark_data_frame, date_column: str, new_format: str) \
-    -> spark_data_frame:
+def format_spark_datetime(
+    df: spark_data_frame, date_column: str, new_format: str
+) -> spark_data_frame:
     """
     This function specifically formats the datetime of the values from a specified column
     in a Spark dataframe to the new date format desired
@@ -116,12 +130,15 @@ def format_spark_datetime(df: spark_data_frame, date_column: str, new_format: st
 
     df = df.withColumn(date_column, date_format(col(date_column), new_format))
     if not df.filter(col(date_column).isNull()).rdd.isEmpty():
-        raise ValueError(f"Value from column '{date_column}' is not an appropriate datetime type")
+        raise ValueError(
+            f"Value from column '{date_column}' is not an appropriate datetime type"
+        )
     return df
 
 
 def format_dynamicframe_datetime(
-    df: DynamicFrame, date_column: str, new_format: str, glue_context) -> DynamicFrame:
+    df: DynamicFrame, date_column: str, new_format: str, glue_context
+) -> DynamicFrame:
     """
     This function specifically formats the datetime of the values from a specified column
     in a Dynamic dataframe to the new date format desired
@@ -137,11 +154,13 @@ def format_dynamicframe_datetime(
         DynamicFrame: result Dynamic dataframe which has the new formatted datetime value
     """
     return DynamicFrame.fromDF(
-        format_spark_datetime(df.toDF(), date_column, new_format), glue_context, "df")
+        format_spark_datetime(df.toDF(), date_column, new_format), glue_context, "df"
+    )
 
 
 def format_python_datetime(
-    object_with_date: Union[Iterable, datetime, str], new_format: str) -> Union[Iterable, str]:
+    object_with_date: Union[Iterable, datetime, str], new_format: str
+) -> Union[Iterable, str]:
     """
     This function specifically formats the datetime values from a Python datetime object
     to the new date format desired
@@ -163,31 +182,42 @@ def format_python_datetime(
         Union[Iterable, str]: result Python object which has the new formatted datetime value
     """
     from collections.abc import MutableSequence, MutableSet, MutableMapping
+
     if isinstance(object_with_date, str):
         if not is_date(object_with_date):
-            raise ValueError(f'The input string "{object_with_date}" cannot be interpreted as date')
+            raise ValueError(
+                f'The input string "{object_with_date}" cannot be interpreted as date'
+            )
         new_object = parser.parse(object_with_date).strftime(new_format)
         if not is_date(new_object):
-            raise ValueError(f'The new_format argument "{new_format}" \
-                does not follow standard date format codes')
+            raise ValueError(
+                f'The new_format argument "{new_format}" \
+                does not follow standard date format codes'
+            )
         return new_object
 
     if isinstance(object_with_date, (datetime, date)):
         object_with_date = object_with_date.strftime(new_format)
         if not is_date(object_with_date):
-            raise ValueError(f'The new_format argument "{new_format}" \
-                does not follow standard date format codes')
+            raise ValueError(
+                f'The new_format argument "{new_format}" \
+                does not follow standard date format codes'
+            )
         return object_with_date
 
     try:
         iter(object_with_date)
-        if issubclass(type(object_with_date), (MutableSequence, MutableSet, MutableMapping)):
+        if issubclass(
+            type(object_with_date), (MutableSequence, MutableSet, MutableMapping)
+        ):
             if isinstance(object_with_date, dict):
                 for key, value in object_with_date.items():
                     object_with_date[key] = format_python_datetime(value, new_format)
             elif isinstance(object_with_date, list):
                 for index, date_object in enumerate(object_with_date):
-                    object_with_date[index] = format_python_datetime(date_object, new_format)
+                    object_with_date[index] = format_python_datetime(
+                        date_object, new_format
+                    )
             else:
                 raise NotImplementedError
         else:
@@ -214,6 +244,7 @@ def is_date(string: str, fuzzy: bool = False) -> bool:
         return True
     except ValueError:
         return False
+
 
 # if __name__ == '__main__':
 # date_range = pd.date_range('2022-11-04', periods=5, freq='D')

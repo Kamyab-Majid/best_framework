@@ -62,13 +62,13 @@ format/autopep8: ## format style with autopep8
 	autopep8 pynutrien tests -r --in-place
 
 format/black: ## format style with black
-	black pynutrien tests 
+	black pynutrien tests
 
 format/isort: ## format style with isort
 	isort pynutrien tests
 
 format: format/autopep8 format/isort format/black ## format style
-	
+
 
 test: ## run tests quickly with the default Python
 	pytest
@@ -126,7 +126,7 @@ glue_zip:
 	for z in wheel_dir/python/*.whl; do unzip $$z -d wheel_dir/python; done
 	find wheel_dir/python -type f -iname "*.whl" -exec rm -rf {} +
 	cd wheel_dir/python/; zip glue_zip * -r
-	mv wheel_dir/python/glue_zip.zip dist/glue_zip.zip 
+	mv wheel_dir/python/glue_zip.zip dist/glue_zip.zip
 	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
 	rm -r -f wheel_dir
 lambda_zip:
@@ -136,7 +136,6 @@ lambda_zip:
 	for z in wheel_dir/python/*.whl; do unzip $$z -d wheel_dir/python; done
 	find wheel_dir/python -type f -iname "*.whl" -exec rm -rf {} +
 	cd wheel_dir/; zip lambda_layer * -r
-	mv wheel_dir/lambda_layer.zip dist/lambda_layer.zip 
+	mv wheel_dir/lambda_layer.zip dist/lambda_layer.zip
 	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
 	rm -r -f wheel_dir
-

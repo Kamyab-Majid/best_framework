@@ -1,6 +1,6 @@
-2022-10-19 11:49:53,468:INFO:Created file string: 
+2022-10-19 11:49:53,468:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -18,14 +18,14 @@
         }
     }
 }
-    
-2022-10-19 11:49:53,469:INFO:Created file string: 
+
+2022-10-19 11:49:53,469:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-10-19 11:49:53,469:INFO:Created file string: 
+
+2022-10-19 11:49:53,469:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -36,8 +36,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-10-19 11:49:53,471:INFO:Created file string: 
+
+2022-10-19 11:49:53,471:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -47,14 +47,14 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-10-19 11:49:53,471:INFO:Success! The json string was converted into <class 'dict'>
 2022-10-19 11:49:53,472:INFO:Success! The yaml string was converted into <class 'dict'>
 2022-10-19 11:49:53,472:INFO:Success! The toml string was converted into <class 'dict'>
 2022-10-19 11:49:53,473:INFO:Success! The ini string was converted into <class 'dict'>
-2022-11-01 10:55:05,022:INFO:Created file string: 
+2022-11-01 10:55:05,022:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -72,14 +72,14 @@
         }
     }
 }
-    
-2022-11-01 10:55:05,022:INFO:Created file string: 
+
+2022-11-01 10:55:05,022:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 10:55:05,022:INFO:Created file string: 
+
+2022-11-01 10:55:05,022:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -90,8 +90,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 10:55:05,022:INFO:Created file string: 
+
+2022-11-01 10:55:05,022:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -101,10 +101,10 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
-2022-11-01 10:55:26,308:INFO:Created file string: 
+
+2022-11-01 10:55:26,308:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -122,14 +122,14 @@
         }
     }
 }
-    
-2022-11-01 10:55:26,308:INFO:Created file string: 
+
+2022-11-01 10:55:26,308:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 10:55:26,308:INFO:Created file string: 
+
+2022-11-01 10:55:26,308:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -140,8 +140,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 10:55:26,308:INFO:Created file string: 
+
+2022-11-01 10:55:26,308:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -151,11 +151,11 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-11-01 10:55:26,316:INFO:Success! The yaml string was converted into <class 'dict'>
-2022-11-01 11:12:08,371:INFO:Created file string: 
+2022-11-01 11:12:08,371:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -173,14 +173,14 @@
         }
     }
 }
-    
-2022-11-01 11:12:08,371:INFO:Created file string: 
+
+2022-11-01 11:12:08,371:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 11:12:08,371:INFO:Created file string: 
+
+2022-11-01 11:12:08,371:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -191,8 +191,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 11:12:08,371:INFO:Created file string: 
+
+2022-11-01 11:12:08,371:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -202,11 +202,11 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-11-01 11:12:08,371:INFO:Success! The json string was converted into <class 'dict'>
-2022-11-01 11:20:33,420:INFO:Created file string: 
+2022-11-01 11:20:33,420:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -224,14 +224,14 @@
         }
     }
 }
-    
-2022-11-01 11:20:33,420:INFO:Created file string: 
+
+2022-11-01 11:20:33,420:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 11:20:33,420:INFO:Created file string: 
+
+2022-11-01 11:20:33,420:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -242,8 +242,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 11:20:33,420:INFO:Created file string: 
+
+2022-11-01 11:20:33,420:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -253,11 +253,11 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-11-01 11:20:33,420:INFO:Success! The json string was converted into <class 'dict'>
-2022-11-01 11:21:44,332:INFO:Created file string: 
+2022-11-01 11:21:44,332:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -275,14 +275,14 @@
         }
     }
 }
-    
-2022-11-01 11:21:44,332:INFO:Created file string: 
+
+2022-11-01 11:21:44,332:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 11:21:44,332:INFO:Created file string: 
+
+2022-11-01 11:21:44,332:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -293,8 +293,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 11:21:44,332:INFO:Created file string: 
+
+2022-11-01 11:21:44,332:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -304,12 +304,12 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-11-01 11:21:44,332:INFO:Success! The json string was converted into <class 'dict'>
 2022-11-01 11:21:44,332:INFO:Success! The yaml string was converted into <class 'dict'>
-2022-11-01 11:24:02,826:INFO:Created file string: 
+2022-11-01 11:24:02,826:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -327,14 +327,14 @@
         }
     }
 }
-    
-2022-11-01 11:24:02,826:INFO:Created file string: 
+
+2022-11-01 11:24:02,826:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 11:24:02,826:INFO:Created file string: 
+
+2022-11-01 11:24:02,826:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -345,8 +345,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 11:24:02,826:INFO:Created file string: 
+
+2022-11-01 11:24:02,826:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -356,11 +356,11 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-11-01 11:24:02,826:INFO:Success! The json string was converted into <class 'dict'>
-2022-11-01 11:24:50,056:INFO:Created file string: 
+2022-11-01 11:24:50,056:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -378,14 +378,14 @@
         }
     }
 }
-    
-2022-11-01 11:24:51,581:INFO:Created file string: 
+
+2022-11-01 11:24:51,581:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 11:24:53,118:INFO:Created file string: 
+
+2022-11-01 11:24:53,118:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -396,8 +396,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 11:24:54,555:INFO:Created file string: 
+
+2022-11-01 11:24:54,555:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -407,11 +407,11 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
+
 2022-11-01 11:24:59,949:INFO:Success! The json string was converted into <class 'dict'>
-2022-11-01 15:35:14,666:INFO:Created file string: 
+2022-11-01 15:35:14,666:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -429,14 +429,14 @@
         }
     }
 }
-    
-2022-11-01 15:35:14,666:INFO:Created file string: 
+
+2022-11-01 15:35:14,666:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 15:35:14,666:INFO:Created file string: 
+
+2022-11-01 15:35:14,666:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -447,8 +447,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 15:35:14,666:INFO:Created file string: 
+
+2022-11-01 15:35:14,666:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -458,10 +458,10 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
-2022-11-01 15:35:41,445:INFO:Created file string: 
+
+2022-11-01 15:35:41,445:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -479,14 +479,14 @@
         }
     }
 }
-    
-2022-11-01 15:35:41,445:INFO:Created file string: 
+
+2022-11-01 15:35:41,445:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 15:35:41,445:INFO:Created file string: 
+
+2022-11-01 15:35:41,445:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -497,8 +497,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 15:35:41,445:INFO:Created file string: 
+
+2022-11-01 15:35:41,445:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -508,10 +508,10 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    
-2022-11-01 15:35:48,600:INFO:Created file string: 
+
+2022-11-01 15:35:48,600:INFO:Created file string:
     {
-    "fruit": { 
+    "fruit": {
         "apple": {
             "size": "small",
             "color": "red",
@@ -529,14 +529,14 @@
         }
     }
 }
-    
-2022-11-01 15:35:48,600:INFO:Created file string: 
+
+2022-11-01 15:35:48,600:INFO:Created file string:
         [apple]
         size = small
         color = red
         country = USA
-    
-2022-11-01 15:35:48,600:INFO:Created file string: 
+
+2022-11-01 15:35:48,600:INFO:Created file string:
         name: "Vishvajit"
         age: 23
         address: Noida
@@ -547,8 +547,8 @@
         - Flask
         - FastAPI
         - DRF ( Django Rest Framework )
-    
-2022-11-01 15:35:48,600:INFO:Created file string: 
+
+2022-11-01 15:35:48,600:INFO:Created file string:
         [user]
         player_x.color = "blue"
         player_o.color = "green"
@@ -558,4 +558,3 @@
 
         [server]
         url = "https://tictactoe.example.com"
-    

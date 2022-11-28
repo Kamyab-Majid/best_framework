@@ -3,6 +3,7 @@ import logging
 import sys
 from typing import Any
 
+
 class ArgParser(argparse.ArgumentParser):
     """This class inherited from the argparse Python library acts as an argument parser
     giving user an interface to fully or partially parse arguments
@@ -14,13 +15,23 @@ class ArgParser(argparse.ArgumentParser):
         Also, a custom logger has also been set up when initializing this class
         """
         super().__init__(*args, **kwargs)
-        self.logger = kwargs["logger"] if "logger" in kwargs else logging.getLogger(__name__)
-        self.handler = kwargs["handler"] if "handler" in kwargs else logging.StreamHandler(
-            sys.stdout)
-        self.logging_level = kwargs["logging_level"] if "logging_level" in kwargs else 20
-        self.format_string = '%(asctime)s::%(module)s::%(funcName)s::%(lineno)d::%(message)s'
+        self.logger = (
+            kwargs["logger"] if "logger" in kwargs else logging.getLogger(__name__)
+        )
+        self.handler = (
+            kwargs["handler"]
+            if "handler" in kwargs
+            else logging.StreamHandler(sys.stdout)
+        )
+        self.logging_level = (
+            kwargs["logging_level"] if "logging_level" in kwargs else 20
+        )
+        self.format_string = (
+            "%(asctime)s::%(module)s::%(funcName)s::%(lineno)d::%(message)s"
+        )
         self.logger_format = logging.Formatter(
-            kwargs["logger_format"] if "logger_format" in kwargs else self.format_string)
+            kwargs["logger_format"] if "logger_format" in kwargs else self.format_string
+        )
 
         self.handler.setFormatter(self.logger_format)
         self.logger.setLevel(self.logging_level)
@@ -60,7 +71,7 @@ class ArgParser(argparse.ArgumentParser):
         """
         if arg_value:
             if isinstance(arg_value, bool):
-                self.add_argument(arg_name, action=f'store_{str(arg_value).lower()}')
+                self.add_argument(arg_name, action=f"store_{str(arg_value).lower()}")
             elif isinstance(arg_value, dict):
                 self.add_argument(arg_name, **arg_value)
             else:

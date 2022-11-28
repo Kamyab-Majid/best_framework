@@ -34,8 +34,9 @@ class S3Operations:
             to get access to an AWS account
         """
         self.session: boto3.session.Session = session
-        self.s3_resource: boto3.resources.factory.s3_resource.ServiceResource \
-            = self.session.resource("s3")
+        self.s3_resource: boto3.resources.factory.s3_resource.ServiceResource = (
+            self.session.resource("s3")
+        )
         self.s3_client = self.session.client("s3")
         self.s3_exceptions = (
             self.s3_resource.meta.client.exceptions.BucketAlreadyExists,
@@ -243,7 +244,8 @@ class S3Operations:
             destination_key (str): Name of the destination key
         """
         logging.info(
-            "Move is not directly supported by boto3, we are performing copy and delete instead.")
+            "Move is not directly supported by boto3, we are performing copy and delete instead."
+        )
         self.copy_object(source, destination_bucket, destination_key)
         self.delete_object(source["Bucket"], source["Key"])
 

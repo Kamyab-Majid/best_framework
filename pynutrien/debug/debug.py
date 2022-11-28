@@ -14,7 +14,9 @@ def debug_trace(frame, event, arg):
     if event == "call":
         func = inspect.getframeinfo(current_frame).function
         sig = inspect.signature(current_frame.f_globals[func])
-        arg_string = ", ".join([f"{key}={current_frame.f_locals[key]}" for key in sig.parameters])
+        arg_string = ", ".join(
+            [f"{key}={current_frame.f_locals[key]}" for key in sig.parameters]
+        )
         print(f"Calling: {func}({arg_string})")
     elif event == "line":
         pass
@@ -39,10 +41,12 @@ def end_debug_trace():
 
 
 if __name__ == "__main__":
+
     def f2(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             func(*args, **kwargs)
+
         return wrapper
 
     @f2
@@ -53,7 +57,6 @@ if __name__ == "__main__":
         # raise Exception
         x += 1
         return x + 1
-
 
     begin_debug_trace()
     print(g(f(3)))

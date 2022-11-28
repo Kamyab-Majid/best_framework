@@ -106,3 +106,68 @@ class ConfigReader:
         except tomli.TOMLDecodeError as exc:
             raise RuntimeError("This file content is not TOML format.") from exc
 
+
+if __name__ == "__main__":
+    json_text = """
+    {
+    "fruit": {
+        "apple": {
+            "size": "small",
+            "color": "red",
+            "country": "USA"
+        },
+        "banana":{
+            "size": "medium",
+            "color": "yellow",
+            "country": "Fiji"
+        },
+        "orange":{
+            "size": "large",
+            "color": "orange",
+            "country": "Egypt"
+        }
+    }
+}
+    """
+    yaml_text = """
+        name: "Vishvajit"
+        age: 23
+        address: Noida
+        Occupation: Software Developer
+        Skills:
+        - Python
+        - Django
+        - Flask
+        - FastAPI
+        - DRF ( Django Rest Framework )
+    """
+    toml_text = """
+        [user]
+        player_x.color = "blue"
+        player_o.color = "green"
+
+        [constant]
+        board_size = 3
+
+        [server]
+        url = "https://tictactoe.example.com"
+    """
+    ini_text = """
+        [apple]
+        size = small
+        color = red
+        country = USA
+    """
+    sample_dict = {
+        "Vegetable": {
+            "carrot": {"size": "cylindrical", "color": "orange", "country": "America"}
+        }
+    }
+    a = ConfigReader(json_text)
+    b = ConfigReader(ini_text)
+    c = ConfigReader(yaml_text)
+    d = ConfigReader(toml_text)
+    print(a.merge_dictionaries(sample_dict))
+    # print(c.parse_yaml())
+    # print(d.parse_toml())
+    # print(b.parse_ini())

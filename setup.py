@@ -42,9 +42,7 @@ setup(
     include_package_data=True,
     keywords="pynutrien",
     name="pynutrien",
-    packages=find_packages(
-        include=["pynutrien", "pynutrien.*"]
-    ),
+    packages=find_packages(include=["pynutrien", "pynutrien.*"]),
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/Nutrien/insights-framework",

@@ -8,6 +8,7 @@ def merge_dictionaries(job_dict, global_dict) -> dict:
     output = {**job_dict, **global_dict}
     return output
 
+
 # Question to ask: How does this merge function perform? What scenarios can we test with this?
 """
 Scenarios:
