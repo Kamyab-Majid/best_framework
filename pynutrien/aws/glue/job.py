@@ -1,14 +1,20 @@
+from __future__ import annotations
+
 import sys
-import json
-from abc import ABCMeta
 from abc import abstractmethod
+
+import s3fs
 from awsglue.context import GlueContext
 from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 
-from pynutrien.etl.base import ETLExtendedBase
+import pynutrien
+from pynutrien.aws.boto import get_boto_session
 from pynutrien.aws.glue.catalog import GlueReader, GlueWriter
+from pynutrien.aws.s3 import S3Operations
+from pynutrien.core.config import ConfigReader
+from pynutrien.etl import ETLExtendedBase
 
 __all__ = ["GlueJob", "BasicGlueJob", "GlueSparkContext"]
 
@@ -16,16 +22,18 @@ __all__ = ["GlueJob", "BasicGlueJob", "GlueSparkContext"]
 class GlueSparkContext:
     def __init__(self):
         """initiating glue_context for a glue job"""
+        self.boto_session = get_boto_session()
         self.spark_context = SparkContext.getOrCreate()
-        # self.glue_context = GlueContext.getOrCreate(self.spark_context) ## Not working correctly
         self.glue_context = GlueContext(self.spark_context)
         self.spark_session = self.glue_context.spark_session
+        self.fs = s3fs.S3FileSystem(anon=False)
+        self.s3 = S3Operations(self.boto_session)
 
 
 class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
     """an abstract class for an ETL job in glue."""
 
-    # job_name = "TEST"  # REMOVE
+    # job_name = "TEST"
     # arguments = []
     @property
     @abstractmethod
@@ -35,21 +43,17 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
 
     @property
     def read(self):
-        return GlueReader(
-            self.glue_context, redshift_tmp_dir=self.args["RedshiftTempDir"]
-        )
+        return GlueReader(self.glue_context, redshift_tmp_dir=self.args["RedshiftTempDir"])
 
     @property
     def write(self):
-        return GlueWriter(
-            self.glue_context, redshift_tmp_dir=self.args["RedshiftTempDir"]
-        )
+        return GlueWriter(self.glue_context, redshift_tmp_dir=self.args["RedshiftTempDir"])
 
     def __init__(self, **kwargs):
         """Initiating GlueSparkContext and ETLExtendedBase."""
         GlueSparkContext.__init__(self)
         ETLExtendedBase.__init__(self, self.job_name, **kwargs)
-        self.job = Job(self.glue_context)
+        self.job: Job = Job(self.glue_context)
         # self.arg_parser = argparse.ArgumentParser()
 
     def setup_arguments(self):
@@ -64,40 +68,39 @@ class BasicGlueJob(ETLExtendedBase, GlueSparkContext):
     def setup(self):
         """logging the arguments and spark config."""
         self.setup_arguments()
+        self.logger.info(f"Library Version: {pynutrien.__version__!r}")
         self.logger.info(f"Supplied Arguments: {sys.argv!r}")
         self.logger.info(f"Parsed Arguments: {self.args!r}")
-        # self.logger.info(f"Available Modules: {sys.modules!r}")
-        # TODO show shared library version
         self.logger.info(f"Spark Config: {self.spark_context.getConf().getAll()!r}")
         self.job.init(self.job_name, self.args)
 
     def cleanup(self):
         """commiting the job."""
-        self.job.commit()
+        if self.job is not None and self.job.isInitialized():
+            self.job.commit()
 
 
 class GlueJob(BasicGlueJob):
     """A glue job with configuration for environment files and config file."""
 
     # Should use --files with spark-submit
-    # or include extra-files with a file named config.json and env.json
+    # or include extra-files with a file named config.json and core.json
     _config_args = ["env_file_path", "cfg_file_path"]
 
     def __init__(self, **kwargs):
-        # may be implemented as property (cannot use +=)
+        # may be implemented as @property (cannot use +=)
         self.arguments = self.arguments + self._config_args
         super().__init__(**kwargs)
 
-    # TODO config reader
-    @classmethod
-    def read_config(cls, path):
-        # TODO use s3/config module
-        return {}
+    def read_config(self, path: str) -> dict:
+        if path.strip().lower() == "dummy":
+            self.logger.info(f"Skipping parsing config file: {path}")
+            return {}
+        self.logger.info(f"Reading config: {path}")
+        return ConfigReader(path).read()
 
-    # TODO config reader
-    @classmethod
-    def read_env(cls, path):
-        return cls.read_config(path)
+    def read_env(self, path: str) -> dict:
+        return self.read_config(path)
 
     def setup(self):
         """setting up the glue job given the file paths."""
@@ -107,48 +110,3 @@ class GlueJob(BasicGlueJob):
         config = self.read_config(self.args["cfg_file_path"])
         self.logger.info(f"Parsed Config: {config!r}")
         self.args = {**env, **config, **self.args}
-
-
-if __name__ == "__main__":
-
-    class MyGlueJob(GlueJob):
-        job_name = "TEST_GLUE"
-        arguments = ["abc"]
-
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-
-            if "--JOB_NAME" in sys.argv:
-                self.arguments.append("JOB_NAME")
-            args = getResolvedOptions(sys.argv, self.arguments)
-
-            self.job = Job(self.glue_context)
-
-            if "JOB_NAME" in args:
-                jobname = args["JOB_NAME"]
-            else:
-                jobname = "test"
-            self.job.init(jobname, args)
-
-        def extract(
-            self, path="s3://awsglue-datasets/examples/us-legislators/all/persons.json"
-        ):
-            self.dynamicframe = self.glue_context.create_dynamic_frame.from_options(
-                connection_type="s3",
-                connection_options={"paths": [path], "recurse": True},
-                format="json",
-            )
-            self.job.commit()
-
-        def transform(
-            self,
-        ):
-            pass
-
-        def load(
-            self,
-        ):
-            pass
-
-    job = MyGlueJob()
-    job.run()

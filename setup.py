@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/core python
 
 """The setup script."""
 
@@ -11,32 +11,28 @@ with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
 requirements = [
-    "Click>=7.0",
+    # "Click>=7.0",
+    # "awswrangler==2.17.0",
+    # "aws-secretmanager-caching==1.1.1.5",
+    # "hdbcli==2.14.22",
+    # "redshift-connector==2.0.909"
 ]
-
 test_requirements = [
     "pytest>=3",
 ]
 
 setup(
-    author="Majid Kamyab",
-    author_email="majid.kamyab@nutrien.com",
-    python_requires=">=3.6",
+    author="Insights Team",
+    author_email="insights@nutrien.com",
+    python_requires=">=3.7",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
     ],
-    description="A shared python library repository - will have sphinx/unittests etc. the sphinx and build need to be configured - and if you are using poetry, that will take a while to set all the parameters, get all the sphinx modules etc.",
-    entry_points={
-        "console_scripts": [
-            "pynutrien=pynutrien.cli:main",
-        ],
-    },
+    description="A shared python data processing framework",
+    entry_points={},
     install_requires=requirements,
     long_description=readme + "\n\n" + history,
     include_package_data=True,
@@ -47,5 +43,5 @@ setup(
     tests_require=test_requirements,
     url="https://github.com/Nutrien/insights-framework",
     version="0.1.0",
-    zip_safe=False,
+    zip_safe=True,
 )

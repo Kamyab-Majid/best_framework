@@ -26,22 +26,22 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-test ## removes all build, test, coverage and Python artifacts
 
-clean-build: ## remove build artifacts
+clean-build: ## removes build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
-clean-pyc: ## remove Python file artifacts
+clean-pyc: ## removes Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-clean-test: ## remove test and coverage artifacts
+clean-test: ## removes test and coverage artifacts
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
@@ -86,40 +86,45 @@ Security: ## checks for security in dependencies and current package
 	safety check -i 39462 -i 40291
 	bandit -r pynutrien/
 
-docs: ## generate Sphinx documentation using doc_type, including API docs.
-	rm -f -r sphinx/_build
-	rm -f -r docs
-	rm -f sphinx/pynutrien.rst
-	rm -f sphinx/modules.rst
-	sphinx-apidoc -f -o sphinx/ pynutrien
-	$(MAKE) -C sphinx clean
-	$(MAKE) -C sphinx $(doc_type)
-	$(BROWSER) docs/_build/html/index.html
-	mv docs/$(doc_type) .
-	rm -r docs
-	mv $(doc_type) docs
-	touch docs/.nojekyll
+docs: ## generates Sphinx documentation using doc_type, including API docs.
+#	rm -f -r docs/_build
+#	rm -f -r docs
+#	rm -f docs/src/pynutrien.rst
+#	rm -f docs/src/modules.rst
+#	sphinx-apidoc -f -o docs/src/ pynutrien
+	$(MAKE) -C docs clean
+#	rm docs/src/pynutrien/modules.rst
+	rm -f docs/src/pynutrien/{modules,pynutrien*}.rst
+	sphinx-apidoc -f -o docs/src/pynutrien pynutrien
+#	$(MAKE) -C docs html
+	$(MAKE) -C docs $(doc_type)
+#	$(BROWSER) docs/_build/html/index.html
+##	mv docs/$(doc_type) .
+##	rm -r docs
+##	mv $(doc_type) docs
+#	touch docs/.nojekyll
 
 servedocs: docs ## compile the docs watching for changes. Usage:  use it whenever you have a server that wants to update as soon as the file changes. The command should be always running.
 	watchmedo shell-command -p '*.rst;*.md' -c '$(MAKE) -C docs $(doc_type)' -R -D .
 
-
-
-release: dist glue_zip lambda_zip ## package and upload a release
-	twine upload dist/*
+#release: dist #glue_zip lambda_zip ## package and upload a release
+#	twine upload dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
+#	python setup.py sdist bdist_wheel
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
 pause: ##pause for 10 seconds
 	sleep 1
-done: test pause test-all pause security pause docs doc_type=html lint release
+#done: test pause test-all pause security pause docs doc_type=html lint release
+done: test pause test-all pause security pause docs doc_type=html lint #release
+# format
 
-glue_zip:
+glue_zip: dist
 	mkdir -p wheel_dir/python
 	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
 	pip wheel --wheel-dir=wheel_dir/python -r glue_requirements.txt
@@ -129,7 +134,8 @@ glue_zip:
 	mv wheel_dir/python/glue_zip.zip dist/glue_zip.zip
 	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
 	rm -r -f wheel_dir
-lambda_zip:
+
+lambda_zip: dist
 	mkdir -p wheel_dir/python
 	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
 	pip wheel --wheel-dir=wheel_dir/python -r lambda_requirements.txt

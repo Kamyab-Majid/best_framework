@@ -1,9 +1,19 @@
-from awsglue.context import GlueContext
+from __future__ import annotations
+
+import typing
+
 from awsglue import DynamicFrame
+from awsglue.context import GlueContext
+
+__all__ = ["GlueIO", "GlueReader", "GlueWriter"]
+
+if typing.TYPE_CHECKING:
+    import pandas as pd
+    from pyspark.sql import DataFrame
 
 
 class GlueIO:
-    def __init__(self, glue_context, redshift_tmp_dir=None):
+    def __init__(self, glue_context, redshift_tmp_dir=None, format=None, transformation_ctx=None):
         """
         This is the init method that initializes GlueIO object to read datacatalog
         into DynamicFrames or pandas df
@@ -11,15 +21,15 @@ class GlueIO:
         Args:
             glue_context (str): Pass the gluecontext session.
             redshift_tmp_dir (str, optional): pass the redshift credentials to store the
-            data frame. Defaults to None.
+            test_files frame. Defaults to None.
         """
         self.glue_context = glue_context
         self._redshift_tmp_dir = redshift_tmp_dir
+        self._fmt = format
+        self._ctx = transformation_ctx
         self._catalog_args = None
-        self._fmt = None
-        self._ctx = None
 
-    def format(self, fmt):
+    def format(self, fmt: str) -> GlueIO:
         """
         Define the format for AWS Glue connection that supports multiple formats
 
@@ -32,7 +42,7 @@ class GlueIO:
         self._fmt = fmt
         return self
 
-    def transformation_ctx(self, ctx):
+    def transformation_ctx(self, ctx: str) -> GlueIO:
         """
         A unique string that is used to identify state information (optional).
 
@@ -45,7 +55,7 @@ class GlueIO:
         self._ctx = ctx
         return self
 
-    def catalog(self, database, table):
+    def catalog(self, database: str, table: str) -> GlueIO:
         """
         A string that defines the database and table name
 
@@ -59,10 +69,10 @@ class GlueIO:
         self._catalog_args = {"database": database, "table": table}
         return self
 
-    def _is_initialized(self, error=True):
+    def _is_initialized(self, error=True) -> bool:
         """
         This method verifies if catalog exists within the defined
-        data catalog.
+        test_files catalog.
 
         Args:
             error (bool, optional): Defaults to True.
@@ -82,7 +92,8 @@ class GlueIO:
         ):
             if error:
                 raise RuntimeError(
-                    f"{self.__class__.__name__} was not initialized properly: call {self.__class__.__name__}.catalog(...)"
+                    f"{self.__class__.__name__} was not initialized properly: "
+                    f"call {self.__class__.__name__}.catalog(...)"
                 )
             return False
         return True
@@ -90,7 +101,7 @@ class GlueIO:
 
 class GlueReader(GlueIO):
     """
-    Glue Reader class that reads the data catalog from AWS.
+    Glue Reader class that reads the test_files catalog from AWS.
 
     Args:
         GlueIO (object): pass the initialized glue object.
@@ -101,7 +112,7 @@ class GlueReader(GlueIO):
 
     _auto_ctx = 0
 
-    def dynamic_frame(self, **kwargs):
+    def dynamic_frame(self, **kwargs) -> DynamicFrame:
         """
         checks if the dynamic frame exists by calling the is_initialized() method.
 
@@ -114,25 +125,23 @@ class GlueReader(GlueIO):
             self._ctx = f"read_df_{GlueReader._auto_ctx}"
             GlueReader._auto_ctx += 1
 
-        txId = self.glue_context.begin_transaction(read_only=False)
-        if "additional_options" in kwargs:
-            if not isinstance(kwargs["additional_options"], dict):
-                raise TypeError("Expected 'additional_options' to be a dictionary")
-            if "transactionId" not in kwargs["additional_options"]:
-                kwargs["additional_options"]["transactionId"] = txId
+        # txId = self.glue_context.begin_transaction(read_only=False)
+        # if "additional_options" in kwargs:
+        #     if not isinstance(kwargs["additional_options"], dict):
+        #         raise TypeError("Expected 'additional_options' to be a dictionary")
+        #     if "transactionId" not in kwargs["additional_options"]:
+        #         kwargs["additional_options"]["transactionId"] = txId
 
         dynf = self.glue_context.create_dynamic_frame.from_catalog(
-            database=self._catalog_args[
-                "database"
-            ],  # TODO: the docs call this name_space now?
+            database=self._catalog_args["database"],
             table_name=self._catalog_args["table"],
             transformation_ctx=self._ctx,
             **kwargs,  # support query
         )
-        self.glue_context.commit_transaction(txId)
+        # self.glue_context.commit_transaction(txId)
         return dynf
 
-    def dataframe(self, **kwargs):
+    def dataframe(self, **kwargs) -> DataFrame:
         """Create a dynamicData frame and converts to dataframe.
 
         Returns:
@@ -155,7 +164,7 @@ class GlueReader(GlueIO):
         df.createOrReplaceTempView(name)
         return df
 
-    def pandas(self, **kwargs):
+    def pandas(self, **kwargs) -> pd.DataFrame:
         """Converts dataframe to pandas dataframe.
 
         Returns:
@@ -166,7 +175,7 @@ class GlueReader(GlueIO):
 
 class GlueWriter(GlueIO):
     """
-    Glue writer class that writes into the data catalog from AWS.
+    Glue writer class that writes into the test_files catalog from AWS.
 
     Args:
         GlueIO (object): pass the initialized glue object.
@@ -174,7 +183,7 @@ class GlueWriter(GlueIO):
 
     _auto_ctx = 0
 
-    def dynamic_frame(self, dynf, **kwargs):
+    def dynamic_frame(self, dynf: DynamicFrame, **kwargs):
         """
         checks if the dynamic frame exists by calling the is_initialized() method.
 
@@ -187,54 +196,38 @@ class GlueWriter(GlueIO):
             self._ctx = f"write_df_{GlueWriter._auto_ctx}"
             GlueWriter._auto_ctx += 1
 
-        txId = self.glue_context.begin_transaction(read_only=False)
-        if "additional_options" in kwargs:
-            if not isinstance(kwargs["additional_options"], dict):
-                raise TypeError("Expected 'additional_options' to be a dictionary")
-            if "transactionId" not in kwargs["additional_options"]:
-                kwargs["additional_options"]["transactionId"] = txId
+        # txId = self.glue_context.begin_transaction(read_only=False)
+        # if "additional_options" in kwargs:
+        #     if not isinstance(kwargs["additional_options"], dict):
+        #         raise TypeError("Expected 'additional_options' to be a dictionary")
+        #     if "transactionId" not in kwargs["additional_options"]:
+        #         kwargs["additional_options"]["transactionId"] = txId
 
         self.glue_context.write_dynamic_frame.from_catalog(
             frame=dynf,
-            database=self._catalog_args[
-                "database"
-            ],  # TODO: the docs call this name_space now?
+            database=self._catalog_args["database"],
             table_name=self._catalog_args["table"],
             transformation_ctx=self._ctx,
             redshift_tmp_dir=self._redshift_tmp_dir,
             **kwargs,
         )
-        self.glue_context.commit_transaction(txId)
-        return txId
+        # self.glue_context.commit_transaction(txId)
+        # return txId
 
-    def dataframe(self, df, **kwargs):
+    def dataframe(self, df: DataFrame, **kwargs):
         """Create a DynamicFrame.
 
-        Returns:
+        args:
             pandas dataframe: converts table to dataframe.
         """
         dynf = DynamicFrame(df, self.glue_context, f"create_df_{GlueWriter._auto_ctx}")
-        self.dynamic_frame(dynf, **kwargs)
+        return self.dynamic_frame(dynf, **kwargs)
 
-    def pandas(self, pdf, **kwargs):
+    def pandas(self, pdf: pd.DataFrame, **kwargs):
         """Converts dataframe to pandas dataframe.
 
-        Returns:
+        Args:
             pandas dataframe: converts table to dataframe.
         """
         df = self.glue_context.spark_session.createDataFrame(pdf)
-        self.dataframe(df, **kwargs)
-
-
-if __name__ == "__main__":
-
-    from pynutrien.aws.glue.job import GlueSparkContext
-
-    context = GlueSparkContext()
-    Reader = GlueReader(context.glue_context, None)
-    df = (
-        Reader.catalog("crawler_test", "caseware_customer_a")
-        .transformation_ctx("cases")
-        .dataframe()
-    )
-    df.show()
+        return self.dataframe(df, **kwargs)

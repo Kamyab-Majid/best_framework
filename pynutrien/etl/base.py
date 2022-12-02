@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from pynutrien.logger import Logger, RuntimeLogger
+
+from pynutrien.core import Logger, RuntimeLogger
 
 __all__ = ["ETLBase", "ETLExtendedBase"]
 
@@ -53,41 +56,3 @@ class ETLExtendedBase(ETLBase):
         "post_load",
         "cleanup",
     ]
-
-
-if __name__ == "__main__":
-
-    class TestETL1(ETLExtendedBase):
-        job_name = "TEST_ETL_1"
-
-        def setup(self):
-            pass
-
-        def extract(self):
-            pass
-
-        def transform(self):
-            pass
-
-        def load(self):
-            pass
-
-    class TestETL2(ETLExtendedBase):
-        job_name = "TEST_ETL_2"
-
-        # def job_name(self): pass
-
-        def extract(self):
-            pass
-
-        def transform(self):
-            raise Exception("Test")
-
-        def load(self):
-            pass
-
-    j1 = TestETL1()
-    j1.run()
-
-    j2 = TestETL2()
-    j2.run()
