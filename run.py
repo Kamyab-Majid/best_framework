@@ -1,6 +1,9 @@
 # run.py
-import pytest
+from __future__ import annotations
+
 import sys
+
+import pytest
 
 
 def main():

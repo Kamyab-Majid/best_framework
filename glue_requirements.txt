@@ -1,1 +1,4 @@
-flask
+redshift_connector
+aws-secretsmanager-caching
+tox
+awswrangler

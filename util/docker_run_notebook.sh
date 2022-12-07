@@ -1,3 +1,5 @@
+# this is used to run jupyter in docker container.
+
 JUPYTER_WORKSPACE_LOCATION=/home/ubuntu/insights-framework/
 WORKSPACE_LOCATION=/home/ubuntu/insights-framework
 

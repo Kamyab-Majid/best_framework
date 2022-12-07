@@ -47,10 +47,10 @@ read -p "Press any key to resume ..."
 #spark-submit /home/glue_user/workspace/$SCRIPT_FILE_NAME $@"
 
 docker run -it \
-    -v "$AWS_CRED_PATH://home/glue_user/.aws" \
-    -v "$PROJECT_DIR://home/glue_user/workspace" \
-    -v "$PROJECT_DIR\\jupyter_workspace://home/glue_user/workspace/jupyter_workspace" \
-    -v "$PROJECT_DIR\\pynutrien://home/glue_user/workspace/jupyter_workspace/pynutrien" \
+    -v "$AWS_CRED_PATH/home/glue_user/.aws" \
+    -v "$PROJECT_DIR/home/glue_user/workspace" \
+    -v "$PROJECT_DIR/jupyter_workspace/home/glue_user/workspace/jupyter_workspace" \
+    -v "$PROJECT_DIR/pynutrien/home/glue_user/workspace/jupyter_workspace/pynutrien" \
     -e AWS_PROFILE="$AWS_PROFILE" \
     -e DISABLE_SSL=true \
     --rm \

@@ -8,6 +8,7 @@ Welcome to pynutrien's documentation!
    readme
    coding
    makefile
+   pre-commit
    git
    sphinx
    installation

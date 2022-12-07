@@ -69,19 +69,21 @@ format/isort: ## format style with isort
 
 format: format/autopep8 format/isort format/black ## format style
 
+test:
+	python3 -m run tests/ --abc=hi --env_file_path=hihi --cfg_file_path=hihihi
+test-docker: ## run tests quickly with the default Python
+	bash ./util/docker_test.sh
 
-test: ## run tests quickly with the default Python
-	pytest
-
-test-all: ## run tests on every Python version with tox
-	tox
+test-all-docker: ## run tests on every Python version with tox
+	bash ./util/docker_tox.sh
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source pynutrien -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
-
+coverage-docker:
+	bash ./util/docker_coverage.sh
 Security: ## checks for security in dependencies and current package
 	safety check -i 39462 -i 40291
 	bandit -r pynutrien/
@@ -109,22 +111,27 @@ servedocs: docs ## compile the docs watching for changes. Usage:  use it wheneve
 
 #release: dist #glue_zip lambda_zip ## package and upload a release
 #	twine upload dist/*
-
-dist: clean ## builds source and wheel package
+bump: ## bumps the version given argument version, which can be patch, minor or major.
+	bumpversion $(version) --allow-dirty
+dist: clean ## builds source and wheel package, version can be patch, minor or major.
+	# sudo apt-get install gcc libpq-dev -y #uncomment if it is first time
+	# sudo apt-get install python-dev  python-pip -y
+	# sudo apt-get install python3-dev python3-pip python3-venv python3-wheel -y
+	# pip3 install wheel
 	python3 setup.py sdist
 	python3 setup.py bdist_wheel
-#	python setup.py sdist bdist_wheel
+	python3 setup.py sdist bdist_wheel
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	python3 setup.py install
 pause: ##pause for 10 seconds
 	sleep 1
 #done: test pause test-all pause security pause docs doc_type=html lint release
 done: test pause test-all pause security pause docs doc_type=html lint #release
 # format
 
-glue_zip: dist
+glue_zip: dist ## creates a lambda zip file from the glue_requirements.txt and current pynutrien version.
 	mkdir -p wheel_dir/python
 	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
 	pip wheel --wheel-dir=wheel_dir/python -r glue_requirements.txt
@@ -135,7 +142,7 @@ glue_zip: dist
 	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
 	rm -r -f wheel_dir
 
-lambda_zip: dist
+lambda_zip: dist ## creates a lambda zip file from the lambda_requirements.txt and current pynutrien version.
 	mkdir -p wheel_dir/python
 	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
 	pip wheel --wheel-dir=wheel_dir/python -r lambda_requirements.txt

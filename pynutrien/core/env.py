@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 
+
 class Environment:
 
     NAME_SPACE = "insights"

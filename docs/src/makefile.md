@@ -21,6 +21,10 @@ To briefly describe the commands, please use `make help` in the terminal of your
 - **dist**:                 builds source and wheel package
 - **install**:              install the package to the active Python's site-packages
 - **Security**             checks for security in dependencies and current package
+- **bump**             bumps the version given the version argument that can be patch, minor or major for more information visit [bumpversion](https://pypi.org/project/bumpversion/)
+- **glue_zip**              creates a lambda zip file from the glue_requirements.txt and current pynutrien version.
+- **lambda_zip**           creates a lambda zip file from the lambda_requirements.txt and current pynutrien version.
+
 In the next sections, we are going to briefly describe some commands in more detail.
 
 ## Dist
