@@ -31,10 +31,12 @@ def delegate_df(df: Any, new_format: str, date_column: str = None, glue_context=
         new_format (str): date format codes that need to be converted to. Please note
         that it is important to use appropriate datetime format codes/ patterns based
         on the type of dataframe passed in. For example:
+
             - For Pandas, Python: "%B %d, %Y" (more can be found in this link:
-            https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior)
+              https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
             - For Spark: "MMMM dd, yyy" (more can be found in this link:
-            https://spark.apache.org/docs/latest/sql-ref-datetime-pattern.html)
+              https://spark.apache.org/docs/latest/sql-ref-datetime-pattern.html
+
         date_column (str, optional): name of the date column that needs to have datetime formatted
         (only optional for Python object and Dynamic dataframe). Defaults to None.
         glue_context (optional): The GlueContext class object
