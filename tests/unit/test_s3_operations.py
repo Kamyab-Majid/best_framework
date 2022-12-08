@@ -36,8 +36,6 @@ def local_files_list():
         "flavors.csv",
         "json_file_uploaded_from_function.json",
         "new_json_file_uploaded_from_out_object_function.json",
-        "sample_CustomersOrders.xml",
-        "sample_taxi_data.parquet",
         "text.txt",
     ]
 
@@ -99,12 +97,12 @@ def copy_to_destination():
 
 @pytest.fixture
 def existing_object_to_move():
-    return {"Bucket": bucket_name, "Key": "sample_taxi_data.parquet"}
+    return {"Bucket": bucket_name, "Key": "enterprise_survey.csv"}
 
 
 @pytest.fixture
 def move_to_destination():
-    return {"Bucket": bucket_name, "Key": "move-destination/sample_taxi_data.parquet"}
+    return {"Bucket": bucket_name, "Key": "move-destination/enterprise_survey.csv"}
 
 
 @pytest.fixture
@@ -220,21 +218,21 @@ def test_move_existing_object_should_make_object_exist_in_destination_and_not_ex
     assert destination_key in existing_objs
     s3_ops.write_to_s3_from_local(
         bucket=bucket_name,
-        file_path="tests/test_files/s3_test_files/sample_taxi_data.parquet",
-        s3_key="sample_taxi_data.parquet",
+        file_path="tests/test_files/s3_test_files/enterprise_survey.csv",
+        s3_key="enterprise_survey.csv",
     )
 
 
 def test_move_existing_object_to_a_non_existing_destination_should_still_work(s3_ops, existing_object_to_move):
-    destination_key = "non-exist-folder/sample_taxi_data.parquet"
+    destination_key = "non-exist-folder/enterprise_survey.csv"
     s3_ops.move_object(source=existing_object_to_move, destination_bucket=bucket_name, destination_key=destination_key)
     existing_objs = objects_list_in_bucket(s3_ops, bucket_name)
     assert existing_object_to_move["Key"] not in existing_objs
     assert destination_key in existing_objs
     s3_ops.write_to_s3_from_local(
         bucket=bucket_name,
-        file_path="tests/test_files/s3_test_files/sample_taxi_data.parquet",
-        s3_key="sample_taxi_data.parquet",
+        file_path="tests/test_files/s3_test_files/enterprise_survey.csv",
+        s3_key="enterprise_survey.csv",
     )
     s3_ops.s3_resource.Object(bucket_name, destination_key).delete()
 

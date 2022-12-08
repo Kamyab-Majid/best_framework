@@ -116,6 +116,7 @@ def test_creating_connection_to_accessible_redshift_cluster_using_AWS_credential
         password=accessible_cluster_config["password"],
     )
     assert conn.connection is not None
+    conn.close()
 
 
 def test_creating_connection_to_accessible_redshift_cluster_using_IAM_credentials(accessible_cluster_config):
@@ -129,6 +130,7 @@ def test_creating_connection_to_accessible_redshift_cluster_using_IAM_credential
         cluster_identifier=accessible_cluster_config["cluster_identifier"],
     )
     assert conn.connection is not None
+    conn.close()
 
 
 def test_creating_connection_with_wrong_credentials_or_cluster_config_should_raise_runtime_error(wrong_cluster_config):
@@ -156,6 +158,7 @@ def test_creating_connection_to_non_accessible_redshift_cluser_should_raise_runt
 
 def test_querying_select_from_redshift_should_return_correct_data(conn, correct_return_data_when_select_query):
     res = conn.redshift_execute_select(table=table_name)
+    conn.close()
     assert res == correct_return_data_when_select_query["all"]
 
 
@@ -163,6 +166,7 @@ def test_querying_select_certain_columns_should_return_data_from_that_column_onl
     conn, correct_return_data_when_select_query
 ):
     res = conn.redshift_execute_select(columns="catid, catname", table=table_name)
+    conn.close()
     assert res == correct_return_data_when_select_query["catid, catname"]
 
 
@@ -176,6 +180,7 @@ def test_querying_select_from_a_non_existing_table_or_column_should_raise_runtim
 
 def test_querying_insert_to_redshift_from_a_source_table(conn, correct_return_data_when_select_query):
     data_after_inserted = conn.redshift_execute_insert(table=staged_table_name, source_table=table_name)
+    conn.close()
     assert sorted(data_after_inserted) == sorted(correct_return_data_when_select_query["all"])
 
 
@@ -186,6 +191,7 @@ def test_querying_insert_to_redshift_using_specified_custom_values(conn):
             (12, 'Concerts', 'Comedy', 'All stand-up comedy performances'), \
             (13, 'Concerts', 'Other', default)",
     )
+    conn.close()
     expected_data = (
         [12, "Concerts", "Comedy", "All stand-up comedy performances"],
         [13, "Concerts", "Other", "General"],
@@ -203,6 +209,7 @@ def test_querying_insert_to_redshift_using_a_source_table_and_custom_values_at_t
             (12, 'Concerts', 'Comedy', 'All stand-up comedy performances'), \
             (13, 'Concerts', 'Other', default)",
     )
+    conn.close()
     expected_data = (
         [12, "Concerts", "Comedy", "All stand-up comedy performances"],
         [13, "Concerts", "Other", "General"],
@@ -221,6 +228,7 @@ def test_querying_insert_with_missing_argunments_should_raise_runtime_error(conn
 
 def test_querying_delete_from_redshift_without_specifying_any_conditions(conn):
     data_after_deleted = conn.redshift_execute_delete(table=table_name)
+    conn.close()
     assert len(data_after_deleted) == 0
 
 
@@ -228,6 +236,7 @@ def test_querying_delete_from_redshift_using_specified_conditions_but_no_referen
     conn, correct_return_data_when_select_query
 ):
     data_after_deleted = conn.redshift_execute_delete(table=table_name, conditions="catid between 0 and 9")
+    conn.close()
     expected_data = correct_return_data_when_select_query["after_conditional_delete"]
     assert sorted(data_after_deleted) == sorted(expected_data)
 
@@ -238,6 +247,7 @@ def test_querying_delete_from_redshift_using_specified_conditions_from_a_referen
     data_after_deleted = conn.redshift_execute_delete(
         table=table_name, reference_tables="event", conditions="event.catid=category.catid and category.catid=9"
     )
+    conn.close()
     expected_data = correct_return_data_when_select_query["after_conditional_delete_referencing_other_table"]
     assert sorted(data_after_deleted) == sorted(expected_data)
 

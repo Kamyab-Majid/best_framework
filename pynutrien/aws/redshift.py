@@ -49,6 +49,7 @@ class RedshiftConnector:
         self.profile = kwargs["profile"] if "profile" in kwargs and kwargs["profile"] else "default"
         self.autocommit = kwargs["autocommit"] if "autocommit" in kwargs and kwargs["autocommit"] else False
 
+        self.cursor = None
         # define connection
         self.connection = None
         try:
@@ -70,11 +71,12 @@ class RedshiftConnector:
                 # "Connection cannot be reached. The cluster is not accessible.")
                 raise RuntimeError("Connection cannot be reached. The cluster is not accessible.") from intf_err
 
-        # turn on autocommit if autocommit is set (default is off)
-        if self.connection and self.autocommit:
-            self.connection.rollback()
-            self.connection.autocommit = True
-            self.connection.run("VACUUM")
+        if self.connection:
+            self.cursor = self.connection.cursor()
+            if self.autocommit:  # turn on autocommit if autocommit is set (default is off)
+                self.connection.rollback()
+                self.connection.autocommit = True
+                self.connection.run("VACUUM")
 
     def create_connection_using_AWS_credentials(self) -> Connection:
         """
@@ -145,18 +147,16 @@ class RedshiftConnector:
             tuple: Result of test_files displayed in a tuple of lists (rows of test_files).
             If test_files is empty, it will be logged as an info for user's awareness.
         """
-        if self.connection:
-            with self.connection as conn:
-                with conn.cursor() as cursor:
-                    try:
-                        cursor.execute(f"SELECT {columns} FROM {table}")
-                        result = cursor.fetchall()
-                        if len(result) == 0:
-                            logging.info("Return dataset is empty")
-                        return result
-                    except ProgrammingError as prog_err:
-                        raise RuntimeError(prog_err.args[0]["M"]) from prog_err
-        raise RuntimeError("Connection has not yet established.")
+        if self.connection and self.cursor:
+            try:
+                self.cursor.execute(f"SELECT {columns} FROM {table}")
+                result = self.cursor.fetchall()
+                if len(result) == 0:
+                    logging.info("Return dataset is empty")
+                return result
+            except ProgrammingError as prog_err:
+                raise RuntimeError(prog_err.args[0]["M"]) from prog_err
+        raise RuntimeError("Connection or cursor has not yet been established.")
 
     def redshift_execute_multiple_queries(self, table: str, query_statements: list) -> tuple:
         """
@@ -174,14 +174,12 @@ class RedshiftConnector:
             tuple: Result of final test_files displayed in a tuple of lists (rows of test_files)
             after queries are executed
         """
-        if self.connection:
-            with self.connection as conn:
-                with conn.cursor() as cursor:
-                    for query in query_statements:
-                        cursor.execute(query)
-                    cursor.execute(f"SELECT * FROM {table}")
-                    return cursor.fetchall()
-        raise RuntimeError("Connection has not yet established.")
+        if self.connection and self.cursor:
+            for query in query_statements:
+                self.cursor.execute(query)
+            self.cursor.execute(f"SELECT * FROM {table}")
+            return self.cursor.fetchall()
+        raise RuntimeError("Connectionor or cursor has not yet been established.")
 
     def redshift_execute_insert(
         self, table: str, source_table: str = None, source_columns: str = "*", values: str = None
@@ -216,6 +214,7 @@ class RedshiftConnector:
         return self.redshift_execute_multiple_queries(table=table, query_statements=query_statements)
 
     def redshift_execute_delete(self, table: str, reference_tables: str = None, conditions: str = None) -> tuple:
+
         """
         This method allows users to execute SQL DELETE queries
 
@@ -248,3 +247,10 @@ class RedshiftConnector:
             else:
                 query_statements.append(f"DELETE FROM {table}")
         return self.redshift_execute_multiple_queries(table=table, query_statements=query_statements)
+
+    def close(self):
+        """This method closes the connection. Need to be called after finish workin on the connection"""
+        if self.cursor:
+            self.cursor.close()
+        if self.connection:
+            self.connection.close()
