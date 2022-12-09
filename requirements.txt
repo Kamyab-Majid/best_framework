@@ -4,7 +4,8 @@ aws_secretsmanager_caching
 # extensions / dependencies
 hdbcli==2.14.22
 redshift_connector==2.0.909
-
+dotenv
+tomli
 # coverage
 # safety
 # bandit

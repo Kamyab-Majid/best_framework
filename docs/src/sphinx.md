@@ -96,4 +96,3 @@ If you are using VSCode consider installing [autoDocstring](https://marketplace.
 
  In case you are using Pycharm take a look at [Pycharm docstring](https://www.jetbrains.com/help/pycharm/creating-documentation-comments.html) .
 
-## GitHub
