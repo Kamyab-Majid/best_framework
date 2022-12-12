@@ -1,13 +1,8 @@
-================
-Glue Development
-================
-
+# Glue Development
 
 ## Basic Structure
 
-
 ```python
-
 from pynutrien.aws.glue import GlueJob
 
 class SampleGlueJob(GlueJob):
@@ -34,18 +29,33 @@ if __name__ == '__main__':
     job.run()
 ```
 
-Open the demo notebook for more details and development process walk through.
-
-
+Open the [demo notebook](https://github.com/Nutrien/insights-framework/blob/develop/jupyter_workspace/demo.ipynb) for more details and development process walk through.
 
 ## Tips
 
-1) Use the DataFrame API whenever possible. Spark's DataFrame API provides a higher-level, more intuitive interface for working with data in Spark. This can make it easier to write and understand your PySpark code, and can also improve the performance of your Spark job.
-2) Use lazy evaluation. Spark uses lazy evaluation, which means that it will not execute a transformation or action on a DataFrame until it is absolutely necessary. This can help improve the performance of your Spark job by avoiding unnecessary computations.
-3) Cache intermediate results. When working with large datasets, it can be helpful to cache the results of intermediate transformations in memory. This can speed up the execution of your Spark job, especially if you are applying multiple transformations to the same dataset.
-4) Use partitioning to improve performance. Partitioning a dataset can improve the performance of your Spark job by allowing Spark to distribute the data across multiple nodes in a cluster. This can help reduce the amount of time spent shuffling data between nodes, and can also make it possible to process larger datasets.
-5) Use broadcast variables for small, static datasets. When working with small datasets that do not change, it can be more efficient to broadcast the entire dataset to all the nodes in the cluster, rather than sending a copy of the data to each node as needed. This can improve the performance of your Spark job by reducing network traffic and avoiding unnecessary data shuffles.
-6) Write unit tests to verify the correctness of your PySpark code. Writing unit tests can help you catch bugs and ensure that your PySpark code is correct. This can save time and effort in the long run, and can also make it easier to refactor and maintain your PySpark code.
+### 1. Use the DataFrame API whenever possible
+
+Spark's DataFrame API provides a higher-level, more intuitive interface for working with data in Spark. This can make it easier to write and understand your PySpark code, and can also improve the performance of your Spark job.
+
+### 2. Use lazy evaluation
+
+Spark uses lazy evaluation, which means that it will not execute a transformation or action on a DataFrame until it is absolutely necessary. This can help improve the performance of your Spark job by avoiding unnecessary computations.
+
+### 3. Cache intermediate results
+
+When working with large datasets, it can be helpful to cache the results of intermediate transformations in memory. This can speed up the execution of your Spark job, especially if you are applying multiple transformations to the same dataset.
+
+### 4. Use partitioning to improve performance
+
+Partitioning a dataset can improve the performance of your Spark job by allowing Spark to distribute the data across multiple nodes in a cluster. This can help reduce the amount of time spent shuffling data between nodes, and can also make it possible to process larger datasets.
+
+### 5. Use broadcast variables for small, static datasets
+
+When working with small datasets that do not change, it can be more efficient to broadcast the entire dataset to all the nodes in the cluster, rather than sending a copy of the data to each node as needed. This can improve the performance of your Spark job by reducing network traffic and avoiding unnecessary data shuffles.
+
+### 6. Write unit tests to verify the correctness of your PySpark code
+
+Writing unit tests can help you catch bugs and ensure that your PySpark code is correct. This can save time and effort in the long run, and can also make it easier to refactor and maintain your PySpark code.
 
 ## Testing
 
