@@ -24,7 +24,7 @@ To briefly describe the commands, please use `make help` in the terminal of your
 - **bump**             bumps the version given the version argument that can be patch, minor or major for more information visit [bumpversion](https://pypi.org/project/bumpversion/)
 - **glue_zip**              creates a lambda zip file from the glue_requirements.txt and current pynutrien version.
 - **lambda_zip**           creates a lambda zip file from the lambda_requirements.txt and current pynutrien version.
-
+- **github_pages** the make file command to create documentation from current branch.
 In the next sections, we are going to briefly describe some commands in more detail.
 
 ## Dist

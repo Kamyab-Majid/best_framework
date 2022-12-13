@@ -86,7 +86,7 @@ Sphinx can update the documentation using the docstrings in the repository. As a
 extensions=['docs.ext.napoleon','other-extensions']
 ```
 
-[^2]:Please refer to [Numpy napoleon example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html) and [Google napoleon example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) for a template of in code documentation.
+[^2]: Refer to [Numpy napoleon example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html) and [Google napoleon example](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) for a template of in code documentation.
 If you are using VSCode consider installing [autoDocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring) extension to automatically generate docstring.
  in order to autogenerate the docstring for your repository. Make sure to use [typing](https://docs.python.org/3/library/typing.html) before you use autoDocstring in order to automatically generate the input and output information on docstring.
 
