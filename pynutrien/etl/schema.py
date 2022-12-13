@@ -78,5 +78,3 @@ if __name__ == '__main__':
         def extend(self, df):
             df = super().extend(df)
             return df.withColumn("etl_time", "12:00")
-
-
