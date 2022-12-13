@@ -156,10 +156,14 @@ lambda_zip: dist ## creates a lambda zip file from the lambda_requirements.txt a
 	mv wheel_dir/lambda_layer.zip dist/lambda_layer.zip
 	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
 	rm -r -f wheel_dir
-
-git_pages:	## the make file command to create documentation from given branch branch.
-	git switch $(source_branch)
+current_branch=$(shell git rev-parse --abbrev-ref HEAD)
+github_pages:	## the make file command to create documentation from current branch branch.
+	
 	make docs doc_type=html
 	cd docs/build/html; touch .nojekyll
 	git switch documentation
-	git checkout $(source_branch) --docs/build/html .
+	find . -type f -not -path "*/\.*" -not -path "*/docs/*" -exec rm -rf -- {} +
+	find . -type d -not -path "*/\.*" -empty -delete
+	mv -t . docs/build/html/*
+	rm -rf docs
+	echo "check the current changes, if suitable push it to origin/documentation. and then switch to $(current_branch)"
