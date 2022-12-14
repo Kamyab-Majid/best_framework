@@ -90,7 +90,7 @@ extensions=['docs.ext.napoleon','other-extensions']
 If you are using VSCode consider installing [autoDocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring) extension to automatically generate docstring.
  in order to autogenerate the docstring for your repository. Make sure to use [typing](https://docs.python.org/3/library/typing.html) before you use autoDocstring in order to automatically generate the input and output information on docstring.
 
-| ![typing gif](pictures/typing_docstring.gif "demonstration of how to generate docstring including the type hints") |
+| ![typing gif](_static/pictures/typing_docstring.gif "demonstration of how to generate docstring including the type hints") |
 |:--:|
 | _demonstration of how to generate docstring including the type hints_ |
 

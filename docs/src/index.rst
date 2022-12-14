@@ -5,16 +5,11 @@ Welcome to pynutrien's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   authors
-   installation
    readme
-   usage
    coding
    makefile
    pre-commit
    git
-   contributing
-   history
    development
 
 .. toctree::

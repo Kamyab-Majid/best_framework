@@ -11,8 +11,10 @@ from pynutrien.aws.s3 import S3Operations
 
 # from dotenv import load_dotenv
 
+s3_client = boto3.client('s3', region_name="ca-central-1")
+s3_resource = boto3.resource('s3')
 
-bucket_name = "insights-framework-test"
+bucket_name = "insights-framework-test-bucket"
 non_existing_bucket_name = "non-existing-bucket"
 
 
@@ -119,6 +121,45 @@ def tag_set():
 def new_tag():
     return {"Key": "tag_key_3", "Value": "tag_value_3"}
 
+def set_up_bucket_with_files(s3_ops, local_files_list):
+
+    try:
+        s3_client.create_bucket(
+            Bucket=bucket_name,
+            CreateBucketConfiguration={'LocationConstraint': "ca-central-1"})
+        for file_name in local_files_list:
+            s3_ops.write_to_s3_from_local(
+                bucket=bucket_name,
+                file_path=f"tests/test_files/s3_test_files/{file_name}",
+                s3_key=file_name
+            )
+    except (s3_resource.meta.client.exceptions.BucketAlreadyExists,
+            s3_resource.meta.client.exceptions.BucketAlreadyOwnedByYou):
+        for file_name in local_files_list:
+            try:
+                if not s3_ops.validate_object(
+                    bucket=bucket_name,
+                    key=file_name
+                ):
+                    s3_ops.write_to_s3_from_local(
+                        bucket=bucket_name,
+                        file_path=f"tests/test_files/s3_test_files/{file_name}",
+                        s3_key=file_name
+                    )
+            except RuntimeError:
+                s3_ops.write_to_s3_from_local(
+                        bucket=bucket_name,
+                        file_path=f"tests/test_files/s3_test_files/{file_name}",
+                        s3_key=file_name
+                    )
+    try:
+        s3_client.create_bucket(
+            Bucket=bucket_name+"-copied",
+            CreateBucketConfiguration={'LocationConstraint': "ca-central-1"})
+    except (s3_resource.meta.client.exceptions.BucketAlreadyExists,
+            s3_resource.meta.client.exceptions.BucketAlreadyOwnedByYou):
+        pass
+
 
 def objects_list_in_bucket(s3_ops, bucket_name):
     objs = s3_ops.list_all_objects(bucket_name)
@@ -127,7 +168,6 @@ def objects_list_in_bucket(s3_ops, bucket_name):
         res.append(obj_.key)
     return res
 
-
 # test_list_buckets
 
 
@@ -135,26 +175,28 @@ def test_list_of_buckets(s3_ops):
     result = s3_ops.list_buckets()
     assert isinstance(result, list)
 
-
 # test_list_all_objects
 
 
-def test_list_of_objects_in_bucket(s3_ops):
+def test_list_of_objects_in_bucket(s3_ops, local_files_list):
+    set_up_bucket_with_files(s3_ops, local_files_list)
     result = s3_ops.list_all_objects(bucket_name)
     assert isinstance(result, list)
 
+    res = objects_list_in_bucket(s3_ops, bucket_name)
+    assert res == local_files_list
 
 # test_read_object
 
 
 def test_pandas_df_using_csv(s3_ops):
-    data = s3_ops.read_object("s3://insights-framework-test/flavors.csv", "pandas", "csv")
+    data = s3_ops.read_object(f"s3://{bucket_name}/flavors.csv", "pandas", "csv")
     assert isinstance(data, pd.DataFrame)
 
 
 def test_exception_error_if_file_does_not_exist_for_pandas_df(s3_ops):
     with pytest.raises(RuntimeError):
-        s3_ops.read_object("s3://insights-framework-test/flavorss.csv", "pandas", "csv")
+        s3_ops.read_object(f"s3://{bucket_name}/flavorss.csv", "pandas", "csv")
 
 
 def test_spark_df_using_csv():
@@ -317,6 +359,7 @@ def test_move_all_objects_should_make_objects_not_exist_in_source_but_exist_in_d
     destination_bucket = bucket_name + "-copied"
     existing_objs_in_source_bucket_before_moved = objects_list_in_bucket(s3_ops, bucket_name)
     assert len(existing_objs_in_source_bucket_before_moved) > 0
+
     s3_ops.move_all_objects(bucket=bucket_name, destination_bucket=destination_bucket)
     existing_objs_in_source_bucket_after_moved = objects_list_in_bucket(s3_ops, bucket_name)
     assert len(existing_objs_in_source_bucket_after_moved) == 0

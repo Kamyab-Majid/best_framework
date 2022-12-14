@@ -159,7 +159,7 @@ def test_creating_connection_to_non_accessible_redshift_cluser_should_raise_runt
 def test_querying_select_from_redshift_should_return_correct_data(conn, correct_return_data_when_select_query):
     res = conn.redshift_execute_select(table=table_name)
     conn.close()
-    assert res == correct_return_data_when_select_query["all"]
+    assert sorted(res) == sorted(correct_return_data_when_select_query["all"])
 
 
 def test_querying_select_certain_columns_should_return_data_from_that_column_only(
@@ -167,7 +167,7 @@ def test_querying_select_certain_columns_should_return_data_from_that_column_onl
 ):
     res = conn.redshift_execute_select(columns="catid, catname", table=table_name)
     conn.close()
-    assert res == correct_return_data_when_select_query["catid, catname"]
+    assert sorted(res) == sorted(correct_return_data_when_select_query["catid, catname"])
 
 
 def test_querying_select_from_a_non_existing_table_or_column_should_raise_runtime_error(conn):

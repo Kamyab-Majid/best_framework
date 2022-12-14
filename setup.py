@@ -4,11 +4,9 @@
 
 from setuptools import find_packages, setup
 
-with open("README.rst") as readme_file:
+with open("README.md") as readme_file:
     readme = readme_file.read()
 
-with open("HISTORY.rst") as history_file:
-    history = history_file.read()
 
 requirements = [
     # "Click>=7.0",
@@ -48,7 +46,7 @@ setup(
         "six==1.16.0",
         "urllib3==1.26.6",
         "awswrangler==2.16.1",
-        "pandas==1.5.2",
+        "pandas==1.3.5",
         "pydevd-pycharm==223.8214.17",
         "pytz==2022.6",
         "pyYAML==6.0",
@@ -61,7 +59,7 @@ setup(
         "wheel==0.38.4",
         "hdbcli==2.14.22",
         "redshift-connector==2.0.909"],
-    long_description=readme + "\n\n" + history,
+    long_description=readme,
     include_package_data=True,
     keywords="pynutrien",
     name="pynutrien",

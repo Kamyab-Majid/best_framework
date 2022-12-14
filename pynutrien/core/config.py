@@ -90,7 +90,7 @@ class ConfigParser:
         try:
             output = yaml.load(file_content, Loader=yaml.Loader)
             return output
-        except yaml.scanner.ScannerError as exc:
+        except (yaml.scanner.ScannerError, yaml.parser.ParserError) as exc:
             raise RuntimeError("This file content is not YAML format.") from exc
 
     def parse_toml(self, file_content: str) -> dict:
