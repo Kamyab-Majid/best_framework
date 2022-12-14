@@ -6,19 +6,8 @@ Welcome to pynutrien's documentation!
    :caption: Contents:
 
    readme
-   coding
-   makefile
-   pre-commit
-   git
-   development
-
-.. toctree::
-   :maxdepth: 3
-   :caption: More Information:
-   :glob:
-
    glue_interactive_sessions
-   sphinx
+
 
 .. toctree::
    :maxdepth: 3
