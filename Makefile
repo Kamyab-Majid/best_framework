@@ -151,7 +151,6 @@ lambda_zip: dist ## creates a lambda zip file from the lambda_requirements.txt a
 	find wheel_dir/python -type f -iname "*.whl" -exec rm -rf {} +
 	cd wheel_dir/python; rm -r -f boto3 botocore certifi chardet pkg_resources charset_normalizer jmespath-0.10.0.data idna jmespath dateutil requests s3transfer setuptools six urllib3
 	cd wheel_dir/python; rm six.py easy_install.py
-	find wheel_dir/python -type d -iname "*dist-info*" -exec rm -rf {} +
 	cd wheel_dir/; zip lambda_layer * -r
 	mv wheel_dir/lambda_layer.zip dist/lambda_layer.zip
 	find wheel_dir/python -type d -iname "*" -exec rm -rf {} +
