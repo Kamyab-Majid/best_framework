@@ -1,4 +1,6 @@
-redshift-connector==2.0.909
-aws-secretsmanager-caching==1.1.1.5
-tomli==2.0.1
-awswrangler==2.16.1
+redshift-connector
+aws-secretsmanager-caching
+tomli
+awswrangler
+
+

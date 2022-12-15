@@ -136,6 +136,7 @@ glue_zip: dist ## creates a lambda zip file from the glue_requirements.txt and c
 	find dist -name "*.whl" -print0 | xargs -0 -I {} cp {} wheel_dir/python
 	pip wheel --wheel-dir=wheel_dir/python -r glue_requirements.txt
 	for z in wheel_dir/python/*.whl; do unzip $$z -d wheel_dir/python; done
+	cd wheel_dir/python; rm -r -f numpy* pandas* boto* aiohttp* setuptools* pytz* yarl* frozenlist* dateutil* urllib3* multidict* certifi* s3transfer* idna* requests attrs* certifi* pymysql* pyarrow* packaging* jmespath* idna* frozenlist* async_timeout* aiosignal* six.py
 	find wheel_dir/python -type f -iname "*.whl" -exec rm -rf {} +
 	cd wheel_dir/python/; zip glue_zip * -r
 	mv wheel_dir/python/glue_zip.zip dist/glue_zip.zip
